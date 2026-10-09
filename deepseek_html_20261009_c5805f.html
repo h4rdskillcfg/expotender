@@ -1,0 +1,2526 @@
+<!DOCTYPE html>
+<html lang="ru" class="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<meta name="description" content="Экспо Тендер — платформа тендеров на застройку выставочных стендов.">
+<title>Экспо Тендер | Платформа</title>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563eb'/%3E%3Cpath d='M9 22V12l7-4 7 4v10h-4v-6h-6v6z' fill='white'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: { extend: {
+    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+    colors: { brand: { 50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',900:'#1e3a8a' } },
+    animation: {
+      'fade-in-up': 'fadeInUp .5s ease-out forwards',
+      'slide-in-right': 'slideInRight .3s ease-out forwards',
+      'shimmer': 'shimmer 1.4s linear infinite',
+      'pulse-ring': 'pulseRing 2s cubic-bezier(0.4,0,0.6,1) infinite',
+    },
+    keyframes: {
+      fadeInUp: { '0%':{opacity:'0',transform:'translateY(20px)'},'100%':{opacity:'1',transform:'translateY(0)'} },
+      slideInRight: { '0%':{opacity:'0',transform:'translateX(100%)'},'100%':{opacity:'1',transform:'translateX(0)'} },
+      shimmer: { '0%':{backgroundPosition:'-200% 0'},'100%':{backgroundPosition:'200% 0'} },
+      pulseRing: { '0%':{transform:'scale(.9)',opacity:'.7'},'70%':{transform:'scale(1.6)',opacity:'0'},'100%':{opacity:'0'} },
+    },
+  }},
+};
+</script>
+<style>
+:root { --brand-500:#3b82f6; --brand-600:#2563eb; --scrollbar-thumb:#cbd5e1; }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+html,body { height:100%; }
+body { background-color:#f8fafc; color:#0f172a; transition: background-color .3s, color .3s; }
+
+html.dark body { background-color:#0b1220; color:#e2e8f0; }
+html.dark .bg-white { background-color:#111a2e!important; }
+html.dark .bg-slate-50, html.dark .bg-slate-50\/50 { background-color:#0b1220!important; }
+html.dark .bg-gray-50, html.dark .bg-gray-50\/80, html.dark .bg-gray-50\/50, html.dark .bg-gray-100 { background-color:#111a2e!important; }
+html.dark .bg-brand-50 { background-color:rgba(59,130,246,.15)!important; }
+html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-50 { border-color:#1e293b!important; }
+html.dark .border-slate-300 { border-color:#334155!important; }
+html.dark .text-slate-800, html.dark .text-slate-700 { color:#e2e8f0!important; }
+html.dark .text-slate-600 { color:#cbd5e1!important; }
+html.dark .text-slate-500 { color:#94a3b8!important; }
+html.dark .text-slate-400 { color:#64748b!important; }
+html.dark .bg-slate-800 { background-color:#1e293b!important; }
+html.dark input, html.dark select, html.dark textarea { color:#e2e8f0!important; }
+html.dark .input-light { background:#0b1220; border-color:#1e293b; }
+
+.tab-content { display:none; }
+.tab-content.is-active { display:block; animation: fadeInUp .4s ease-out forwards; }
+.tab-content.is-active[data-display="flex"] { display:flex; }
+
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius:10px; }
+
+.input-light { background:#fff; border:1px solid #e2e8f0; transition: border-color .2s, box-shadow .2s; }
+.input-light:focus { outline:none; border-color:var(--brand-500); box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
+
+.slide-panel { transform: translateX(100%); transition: transform .4s cubic-bezier(.4,0,.2,1); }
+.slide-panel.is-open { transform: translateX(0); }
+.backdrop { opacity:0; pointer-events:none; transition: opacity .3s; }
+.backdrop.is-open { opacity:1; pointer-events:auto; }
+.inner-tab-btn { border-bottom:2px solid transparent; }
+.inner-tab-btn[aria-selected="true"] { border-bottom-color: var(--brand-600); color: var(--brand-600); }
+:focus-visible { outline:2px solid var(--brand-500); outline-offset:2px; border-radius:6px; }
+
+.skeleton { background: linear-gradient(90deg,#e5e7eb 0%,#f1f5f9 50%,#e5e7eb 100%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; border-radius: 12px; }
+html.dark .skeleton { background: linear-gradient(90deg,#1e293b 0%,#334155 50%,#1e293b 100%); background-size: 200% 100%; }
+
+[data-tooltip] { position: relative; }
+[data-tooltip]::after { content: attr(data-tooltip); position:absolute; bottom: calc(100% + 8px); left:50%; transform: translateX(-50%) translateY(4px); background:#0f172a; color:#fff; padding:6px 10px; border-radius:8px; font-size:11px; font-weight:600; white-space:nowrap; opacity:0; pointer-events:none; transition: opacity .15s, transform .15s; z-index:60; }
+[data-tooltip]:hover::after, [data-tooltip]:focus-visible::after { opacity:1; transform: translateX(-50%) translateY(0); }
+
+.cmd-backdrop { opacity:0; pointer-events:none; transition: opacity .2s; }
+.cmd-backdrop.is-open { opacity:1; pointer-events:auto; }
+.cmd-item[aria-selected="true"] { background: rgba(59,130,246,.1); }
+
+.wizard-step { display:none; }
+.wizard-step.is-active { display:block; animation: fadeInUp .3s ease-out; }
+.wizard-dot { width:10px; height:10px; border-radius:50%; background:#e2e8f0; }
+.wizard-dot.is-active { background: var(--brand-600); }
+.wizard-dot.is-done { background: #22c55e; }
+
+.bar-chart { display:flex; align-items:flex-end; gap:6px; height:80px; }
+.bar-chart .bar { flex:1; background: linear-gradient(180deg,var(--brand-500),var(--brand-700)); border-radius:6px 6px 2px 2px; min-height:4px; }
+
+.best-cell { background: rgba(34,197,94,.12); font-weight:700; color:#16a34a; }
+.warn-cell { background: rgba(245,158,11,.12); font-weight:700; color:#d97706; }
+
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.trust-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:9999px; font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; }
+.trust-green { background: rgba(34,197,94,.12); color:#16a34a; border:1px solid rgba(34,197,94,.3); }
+
+.stepper { display:flex; gap:0; align-items:center; }
+.stepper-step { flex:1; position:relative; text-align:center; padding-top:32px; font-size:11px; color:#94a3b8; font-weight:600; }
+.stepper-step::before { content:''; position:absolute; top:10px; left:50%; transform:translateX(-50%); width:20px; height:20px; border-radius:50%; background:#e2e8f0; border:3px solid #fff; z-index:2; transition: background .3s; }
+.stepper-step::after { content:''; position:absolute; top:19px; left:50%; width:100%; height:2px; background:#e2e8f0; z-index:1; }
+.stepper-step:last-child::after { display:none; }
+.stepper-step.is-done::before { background:#22c55e; }
+.stepper-step.is-done::after { background:#22c55e; }
+.stepper-step.is-current::before { background:var(--brand-600); box-shadow: 0 0 0 6px rgba(59,130,246,.2); animation: pulseRing 2s infinite; }
+.stepper-step.is-current { color: var(--brand-600); }
+.stepper-step.is-done { color:#16a34a; }
+
+.tender-card { transition: box-shadow .2s, outline .15s; }
+.tender-card.is-selected { outline: 2px solid var(--brand-500); outline-offset: 2px; }
+.tender-card.is-selected .tender-check { opacity:1; }
+.tender-check { opacity:0; transition: opacity .15s; }
+.tender-card:hover .tender-check { opacity:.6; }
+.tender-card .quick-actions { opacity:0; transition: opacity .15s; }
+.tender-card:hover .quick-actions, .tender-card:focus-within .quick-actions { opacity:1; }
+.tender-card.is-select-mode { cursor: pointer; }
+
+.kbd { font-family: ui-monospace, monospace; font-size:10px; padding:2px 6px; border-radius:4px; background:#f1f5f9; border:1px solid #e2e8f0; color:#475569; }
+html.dark .kbd { background:#1e293b; border-color:#334155; color:#cbd5e1; }
+
+.media-card { transition: transform .3s, box-shadow .3s; }
+.media-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(0,0,0,.15); }
+
+.position-row { display: grid; grid-template-columns: 1fr 70px 80px 100px 130px 36px; gap: 8px; align-items: center; }
+
+.saved-search-chip { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:9999px; background:#eff6ff; color:#2563eb; font-size:12px; font-weight:600; }
+.saved-search-chip button { color:#2563eb; }
+.hotkey-hint { position:fixed; bottom:20px; left:20px; background:#0f172a; color:#fff; padding:8px 12px; border-radius:10px; font-size:11px; font-weight:600; z-index:70; opacity:0; transition: opacity .2s; pointer-events:none; }
+.hotkey-hint.is-visible { opacity:1; }
+</style>
+</head>
+
+<body class="h-screen flex overflow-hidden selection:bg-brand-100 selection:text-brand-900">
+
+<a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[100] focus:bg-brand-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-xl focus:font-semibold">К основному содержимому</a>
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="w-20 lg:w-72 bg-white border-r border-gray-100 flex flex-col h-full flex-shrink-0 z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+  <div class="h-20 flex items-center justify-center lg:justify-start lg:px-8 border-b border-gray-50">
+    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-md shadow-brand-500/20">
+      <i class="ph ph-buildings text-xl text-white" aria-hidden="true"></i>
+    </div>
+    <span class="ml-3 font-bold text-xl tracking-tight text-slate-800 hidden lg:block">Экспо<span class="text-brand-600">Тендер</span></span>
+  </div>
+
+  <nav class="flex-1 py-6 px-3 lg:px-4 space-y-2 overflow-y-auto" aria-label="Основная навигация">
+    <button type="button" data-action="switch-tab" data-tab="tab-dashboard" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group bg-brand-50 text-brand-600 font-semibold shadow-sm" aria-current="page">
+      <i class="ph ph-squares-four text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+      <span class="hidden lg:block ml-3">Витрина тендеров</span>
+    </button>
+    <button type="button" data-action="switch-tab" data-tab="tab-create" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group text-slate-500 hover:bg-gray-50 hover:text-slate-800 font-medium">
+      <i class="ph ph-plus-circle text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+      <span class="hidden lg:block ml-3">Размещение заказа</span>
+    </button>
+    <button type="button" data-action="switch-tab" data-tab="tab-check" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group text-slate-500 hover:bg-gray-50 hover:text-slate-800 font-medium">
+      <i class="ph ph-shield-check text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+      <span class="hidden lg:block ml-3">Проверка контрагента</span>
+    </button>
+    <button type="button" data-action="switch-tab" data-tab="tab-subcontract" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group text-slate-500 hover:bg-gray-50 hover:text-slate-800 font-medium">
+      <i class="ph ph-handshake text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+      <span class="hidden lg:block ml-3">Биржа субподряда</span>
+    </button>
+    <button type="button" data-action="switch-tab" data-tab="tab-media" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group text-slate-500 hover:bg-gray-50 hover:text-slate-800 font-medium">
+      <i class="ph ph-images text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+      <span class="hidden lg:block ml-3">Медиатека решений</span>
+    </button>
+    <button type="button" data-action="switch-tab" data-tab="tab-exhibitions" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group text-slate-500 hover:bg-gray-50 hover:text-slate-800 font-medium">
+      <i class="ph ph-calendar-dots text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+      <span class="hidden lg:block ml-3">Календарь выставок</span>
+    </button>
+    <button type="button" data-action="switch-tab" data-tab="tab-analytics" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group text-slate-500 hover:bg-gray-50 hover:text-slate-800 font-medium">
+      <i class="ph ph-chart-line-up text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+      <span class="hidden lg:block ml-3">Аналитика рынка</span>
+    </button>
+
+    <div class="pt-4 mt-2 border-t border-gray-100 space-y-2">
+      <button type="button" data-action="switch-tab" data-tab="tab-projects" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group text-slate-500 hover:bg-gray-50 hover:text-slate-800 font-medium">
+        <i class="ph ph-kanban text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+        <span class="hidden lg:block ml-3">Мои проекты (CRM)</span>
+      </button>
+      <button type="button" data-action="switch-tab" data-tab="tab-audit" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group text-slate-500 hover:bg-gray-50 hover:text-slate-800 font-medium">
+        <i class="ph ph-clock-counter-clockwise text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+        <span class="hidden lg:block ml-3">Журнал действий</span>
+      </button>
+      <button type="button" data-action="switch-tab" data-tab="tab-notifications" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group text-slate-500 hover:bg-gray-50 hover:text-slate-800 font-medium">
+        <i class="ph ph-bell text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+        <span class="hidden lg:block ml-3">Уведомления</span>
+      </button>
+      <button type="button" data-action="switch-tab" data-tab="tab-profile" class="nav-btn w-full flex items-center justify-center lg:justify-start px-3 py-3 rounded-xl transition-all group text-slate-500 hover:bg-gray-50 hover:text-slate-800 font-medium">
+        <i class="ph ph-user-circle text-2xl flex-shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+        <span class="hidden lg:block ml-3">Профиль и команда</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="p-4 m-4 rounded-2xl bg-gray-50 border border-gray-100 hidden lg:block">
+    <div class="flex items-center">
+      <div class="relative">
+        <img src="https://placehold.co/40x40/2563eb/ffffff?text=EX" alt="" class="w-10 h-10 rounded-full shadow-sm" loading="lazy">
+        <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+      </div>
+      <div class="ml-3 overflow-hidden flex-1">
+        <p class="text-sm font-semibold text-slate-800 truncate flex items-center gap-1">ООО "ГлавСтройЭкспо" <i class="ph ph-seal-check text-emerald-500 text-xs" data-tooltip="Верифицирован через ЕСИА"></i></p>
+        <p class="text-xs text-slate-500 truncate" data-role-label>Аккаунт Заказчика</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ================= MAIN ================= -->
+<main id="main-content" class="flex-1 flex flex-col h-full bg-slate-50/50 relative overflow-hidden">
+
+  <header class="h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-4 lg:px-10 z-10 sticky top-0 gap-3">
+    <div class="flex flex-col min-w-0">
+      <nav aria-label="Хлебные крошки" class="text-[11px] text-slate-400 flex items-center gap-1.5 mb-0.5 truncate">
+        <span>Экспо Тендер</span><i class="ph ph-caret-right text-[10px]" aria-hidden="true"></i>
+        <span id="crumb-current" class="text-slate-600 font-medium">Витрина тендеров</span>
+      </nav>
+      <h1 class="text-lg lg:text-xl font-bold text-slate-800 truncate" id="header-title">Витрина тендеров</h1>
+      <span class="text-[11px] font-medium text-slate-400" id="current-date"></span>
+    </div>
+
+    <div class="flex items-center space-x-2 lg:space-x-3">
+      <button type="button" data-action="open-palette" class="hidden md:flex items-center gap-2 text-xs text-slate-500 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 transition-colors" aria-label="Командная палитра">
+        <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+        <kbd class="kbd">⌘K</kbd>
+      </button>
+
+      <div class="hidden md:flex bg-gray-100 border border-gray-200 rounded-xl p-0.5 text-xs font-semibold" role="tablist" aria-label="Роль">
+        <button type="button" data-action="set-role" data-role="customer" aria-selected="true" class="role-btn px-3 py-1.5 rounded-lg bg-white shadow-sm text-slate-800">Заказчик</button>
+        <button type="button" data-action="set-role" data-role="contractor" aria-selected="false" class="role-btn px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800">Подрядчик</button>
+      </div>
+
+      <button type="button" data-action="toggle-lang" class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-slate-600 font-bold text-xs" aria-label="Сменить язык" data-tooltip="RU / EN" id="lang-btn">RU</button>
+
+      <button type="button" data-action="toggle-theme" class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-slate-600" aria-label="Тема" data-tooltip="Тема">
+        <i class="ph ph-sun text-lg dark-icon-light" aria-hidden="true"></i>
+        <i class="ph ph-moon text-lg hidden dark-icon-dark" aria-hidden="true"></i>
+      </button>
+
+      <div class="relative bell-container">
+        <button type="button" data-action="toggle-notifications" class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 relative shadow-sm text-slate-600" aria-label="Уведомления" aria-haspopup="true" aria-expanded="false" aria-controls="notif-dropdown">
+          <i class="ph ph-bell text-lg" aria-hidden="true"></i>
+          <span id="notif-badge" class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-pulse" aria-hidden="true"></span>
+        </button>
+        <div id="notif-dropdown" hidden class="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden origin-top-right" role="menu">
+          <div class="p-4 border-b border-gray-50 bg-slate-50 flex justify-between items-center">
+            <h2 class="font-bold text-slate-800 text-sm">Уведомления</h2>
+            <button type="button" data-action="switch-tab" data-tab="tab-notifications" class="text-[10px] text-brand-600 font-semibold bg-brand-50 px-2 py-1 rounded-full">Все</button>
+          </div>
+          <div class="max-h-80 overflow-y-auto" id="notif-dropdown-list"></div>
+          <div class="p-3 text-center border-t border-gray-50">
+            <button type="button" data-action="mark-read" class="text-xs font-semibold text-brand-600">Отметить прочитанными</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex-1 overflow-y-auto p-4 lg:p-10 z-0 scroll-smooth" data-scroll-container>
+
+    <!-- ============ DASHBOARD ============ -->
+    <section id="tab-dashboard" class="tab-content is-active max-w-7xl mx-auto" data-title="Витрина тендеров" aria-labelledby="header-title">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 opacity-0 animate-fade-in-up">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+          <div><p class="text-sm font-medium text-slate-500 mb-1">Активные тендеры</p><p class="text-3xl font-bold text-slate-800" data-count-active>—</p></div>
+          <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><i class="ph ph-files text-2xl" aria-hidden="true"></i></div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+          <div><p class="text-sm font-medium text-slate-500 mb-1">Суммарный бюджет</p><p class="text-2xl font-bold text-slate-800" data-sum-budget>—</p></div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center"><i class="ph ph-wallet text-2xl" aria-hidden="true"></i></div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+          <div><p class="text-sm font-medium text-slate-500 mb-1">Средний бюджет / м²</p><p class="text-2xl font-bold text-slate-800" data-avg-sqm>—</p></div>
+          <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center"><i class="ph ph-calculator text-2xl" aria-hidden="true"></i></div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+          <p class="text-sm font-medium text-slate-500 mb-1">Бюджет / 6 мес</p>
+          <div class="bar-chart" role="img" aria-label="Динамика">
+            <div class="bar" style="height:35%"></div><div class="bar" style="height:55%"></div><div class="bar" style="height:48%"></div>
+            <div class="bar" style="height:75%"></div><div class="bar" style="height:60%"></div><div class="bar" style="height:88%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 mb-4 opacity-0 animate-fade-in-up" id="saved-searches">
+        <span class="text-xs font-semibold text-slate-500">Сохранённые:</span>
+      </div>
+
+      <div class="flex flex-col md:flex-row md:justify-between md:items-end gap-3 mb-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">Все заказы на застройку</h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            <span data-tenders-count>0</span> тендеров ·
+            <button data-action="open-search-help" class="text-brand-600 hover:underline">Расширенный поиск</button>
+            · <span data-select-indicator hidden class="text-brand-600 font-semibold">Выбрано: <span data-selected-count>0</span></span>
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" data-action="toggle-select-mode" data-tooltip="Выбрать для сравнения" class="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg text-slate-600 hover:bg-gray-50 font-medium flex items-center">
+            <i class="ph ph-check-square mr-2" aria-hidden="true"></i> <span data-select-label>Выбрать</span>
+          </button>
+          <button type="button" data-action="open-compare-tenders" class="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg text-slate-600 hover:bg-gray-50 font-medium flex items-center">
+            <i class="ph ph-scales mr-2" aria-hidden="true"></i> Сравнить
+          </button>
+          <button type="button" data-action="open-filters" class="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg text-slate-600 hover:bg-gray-50 font-medium flex items-center">
+            <i class="ph ph-funnel mr-2" aria-hidden="true"></i> Фильтры
+            <span data-filter-count hidden class="ml-2 bg-brand-600 text-white text-[10px] px-1.5 rounded-full">0</span>
+          </button>
+          <button type="button" data-action="export-csv" class="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg text-slate-600 hover:bg-gray-50 font-medium flex items-center">
+            <i class="ph ph-download-simple mr-2" aria-hidden="true"></i> CSV
+          </button>
+        </div>
+      </div>
+
+      <div class="relative mb-4 opacity-0 animate-fade-in-up">
+        <label for="global-search" class="sr-only">Поиск</label>
+        <input id="global-search" type="search" placeholder="Поиск: газпром, площадь:>200, бюджет:10000000..20000000, статус:активный..." autocomplete="off" class="input-light w-full rounded-xl pl-10 pr-4 py-3 text-sm text-slate-700">
+        <i class="ph ph-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-lg pointer-events-none" aria-hidden="true"></i>
+        <div id="search-tokens" class="flex flex-wrap gap-1.5 mt-2"></div>
+      </div>
+
+      <div class="flex flex-col space-y-4" id="tenders-list"></div>
+    </section>
+
+    <!-- ============ TENDER DETAILS ============ -->
+    <section id="tab-tender-details" class="tab-content max-w-6xl mx-auto" data-title="Детали сделки" data-display="flex" aria-labelledby="header-title">
+      <div class="w-full">
+        <button type="button" data-action="switch-tab" data-tab="tab-dashboard" class="text-slate-500 hover:text-brand-600 flex items-center text-sm font-semibold mb-6 group">
+          <span class="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center mr-3 group-hover:border-brand-300 group-hover:bg-brand-50"><i class="ph ph-arrow-left" aria-hidden="true"></i></span>
+          Вернуться к витрине
+        </button>
+
+        <div class="flex flex-col xl:flex-row gap-6">
+          <div class="xl:w-2/3 space-y-6">
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 relative overflow-hidden flex flex-col">
+              <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-brand-400 z-10" aria-hidden="true"></div>
+              <div class="p-8 pb-0">
+                <div class="flex justify-between items-start mb-6 gap-4">
+                  <div class="flex items-center min-w-0">
+                    <img id="det-logo" src="" alt="" class="w-16 h-16 rounded-2xl mr-5 border border-gray-100 shadow-sm flex-shrink-0" loading="lazy">
+                    <div class="min-w-0">
+                      <h2 id="det-title" class="text-2xl font-bold text-slate-800 mb-1 truncate">—</h2>
+                      <p id="det-sub" class="text-slate-500 font-medium text-sm">—</p>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button type="button" data-action="add-ics" data-tooltip="В календарь" class="w-9 h-9 rounded-full bg-white border border-gray-200 flex items-center justify-center text-slate-500 hover:text-brand-600 hover:border-brand-300"><i class="ph ph-calendar-plus" aria-hidden="true"></i></button>
+                    <button type="button" data-action="share-tender" data-tooltip="Поделиться" class="w-9 h-9 rounded-full bg-white border border-gray-200 flex items-center justify-center text-slate-500 hover:text-brand-600 hover:border-brand-300"><i class="ph ph-share-network" aria-hidden="true"></i></button>
+                    <button type="button" data-action="duplicate-tender" data-tooltip="Дублировать" class="w-9 h-9 rounded-full bg-white border border-gray-200 flex items-center justify-center text-slate-500 hover:text-brand-600 hover:border-brand-300"><i class="ph ph-copy" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 p-4 bg-slate-50 rounded-2xl border border-gray-100">
+                  <div><p class="text-xs text-slate-400 mb-1">Бюджет</p><p class="text-lg font-bold text-slate-800" id="det-budget">—</p></div>
+                  <div><p class="text-xs text-slate-400 mb-1">Площадь</p><p class="text-lg font-bold text-slate-800" id="det-area">—</p></div>
+                  <div><p class="text-xs text-slate-400 mb-1">Тип</p><p class="text-lg font-bold text-slate-800" id="det-type">—</p></div>
+                  <div><p class="text-xs text-slate-400 mb-1">Дедлайн</p><p class="text-lg font-bold text-red-500" id="det-deadline">—</p></div>
+                </div>
+
+                <div class="mb-6 p-5 bg-gradient-to-r from-blue-50 to-emerald-50 dark:from-blue-900/20 dark:to-emerald-900/20 rounded-2xl border border-blue-100">
+                  <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i class="ph ph-lock-key text-brand-600" aria-hidden="true"></i> Безопасная сделка (Эскроу)</h3>
+                    <span class="text-[10px] font-bold uppercase tracking-wider bg-white text-brand-600 px-2 py-1 rounded-full border border-brand-200">Застраховано</span>
+                  </div>
+                  <div class="stepper">
+                    <div class="stepper-step is-done">Резерв</div>
+                    <div class="stepper-step is-current">Производство</div>
+                    <div class="stepper-step">Монтаж</div>
+                    <div class="stepper-step">Приёмка</div>
+                    <div class="stepper-step">Оплата</div>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-4 text-center">Средства защищены до подписания акта. Комиссия платформы — 1.5%.</p>
+                </div>
+              </div>
+
+              <div class="flex px-8 border-b border-gray-100 mt-2 overflow-x-auto" role="tablist">
+                <button type="button" id="inner-tab-desc" data-action="switch-inner-tab" data-panel="desc" class="inner-tab-btn pb-3 px-2 mr-6 text-sm font-bold text-slate-500 whitespace-nowrap" role="tab" aria-selected="true">Описание и файлы</button>
+                <button type="button" id="inner-tab-qa" data-action="switch-inner-tab" data-panel="qa" class="inner-tab-btn pb-3 px-2 mr-6 text-sm font-bold text-slate-500 flex items-center whitespace-nowrap" role="tab" aria-selected="false">
+                  Q&A <span class="ml-2 bg-brand-100 text-brand-600 text-[10px] px-1.5 py-0.5 rounded-full" data-qa-count>0</span>
+                </button>
+                <button type="button" id="inner-tab-compare" data-action="switch-inner-tab" data-panel="compare" class="inner-tab-btn pb-3 px-2 mr-6 text-sm font-bold text-slate-500 flex items-center whitespace-nowrap" role="tab" aria-selected="false">
+                  <i class="ph ph-scales mr-1.5" aria-hidden="true"></i> Сравнить сметы
+                </button>
+                <button type="button" id="inner-tab-audit" data-action="switch-inner-tab" data-panel="audit" class="inner-tab-btn pb-3 px-2 text-sm font-bold text-slate-500 flex items-center whitespace-nowrap" role="tab" aria-selected="false">
+                  <i class="ph ph-clock-counter-clockwise mr-1.5" aria-hidden="true"></i> История
+                </button>
+              </div>
+
+              <div id="inner-content-desc" class="p-8 pt-6" role="tabpanel">
+                <div class="flex justify-between items-center mb-3">
+                  <h3 class="text-lg font-bold text-slate-800">Описание задачи</h3>
+                  <button type="button" data-action="ai-generate-tz" class="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                    <i class="ph ph-magic-wand" aria-hidden="true"></i> Сгенерировать AI ТЗ
+                  </button>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6" id="det-desc">—</p>
+                <div id="ai-tz-block" hidden class="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-2xl border border-purple-200">
+                  <div class="flex items-center gap-2 mb-3"><i class="ph ph-magic-wand text-purple-500" aria-hidden="true"></i><span class="text-sm font-bold text-purple-700">AI-черновик ТЗ</span></div>
+                  <div id="ai-tz-content" class="text-xs text-slate-700 space-y-2"></div>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 mb-3">Документация</h3>
+                <div class="flex flex-wrap gap-3">
+                  <a href="#" download class="flex items-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 text-sm font-semibold text-slate-700 shadow-sm"><i class="ph ph-file-pdf text-red-500 text-xl mr-2" aria-hidden="true"></i> Бриф.pdf</a>
+                  <a href="#" download class="flex items-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 text-sm font-semibold text-slate-700 shadow-sm"><i class="ph ph-file-zip text-blue-500 text-xl mr-2" aria-hidden="true"></i> Рендеры.zip</a>
+                  <a href="#" download class="flex items-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 text-sm font-semibold text-slate-700 shadow-sm"><i class="ph ph-file-xls text-emerald-500 text-xl mr-2" aria-hidden="true"></i> Смета.xlsx</a>
+                </div>
+              </div>
+
+              <div id="inner-content-qa" hidden class="flex-col p-8 pt-6 bg-slate-50/50 flex-1" role="tabpanel">
+                <div id="qa-thread" class="space-y-4 mb-6 max-h-[400px] overflow-y-auto pr-2"></div>
+                <form data-action="submit-question" class="relative mt-auto">
+                  <label for="qa-input" class="sr-only">Вопрос</label>
+                  <input id="qa-input" type="text" placeholder="Задать вопрос заказчику..." required class="w-full bg-white border border-gray-200 rounded-xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-brand-500">
+                  <button type="submit" aria-label="Отправить" class="absolute right-2 top-2 w-8 h-8 bg-brand-600 text-white rounded-lg flex items-center justify-center"><i class="ph ph-paper-plane-right" aria-hidden="true"></i></button>
+                </form>
+              </div>
+
+              <div id="inner-content-compare" hidden class="p-8 pt-6 overflow-x-auto" role="tabpanel"><div id="compare-content"></div></div>
+              <div id="inner-content-audit" hidden class="p-8 pt-6" role="tabpanel"><ol id="audit-list" class="relative border-l-2 border-gray-100 ml-2 space-y-6"></ol></div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+              <h3 class="font-bold text-slate-800 mb-4 text-lg">Похожие тендеры</h3>
+              <div id="similar-tenders" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+            </div>
+          </div>
+
+          <div class="xl:w-1/3 space-y-6">
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-3xl p-6 border border-purple-200">
+              <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="ph ph-magic-wand text-purple-500" aria-hidden="true"></i> AI-подбор подрядчиков</h3>
+              <p class="text-xs text-slate-500 mb-4">На основе 128 успешных сделок и вашего метража.</p>
+              <div id="ai-recommendations" class="space-y-2"></div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+              <h3 class="text-lg font-bold text-slate-800 mb-1 flex items-center"><i class="ph ph-users-three text-brand-500 mr-2 text-xl" aria-hidden="true"></i> Участники</h3>
+              <p class="text-xs text-slate-400 mb-5">Кликните для профиля.</p>
+              <ul class="space-y-3 mb-6" id="participants-list"></ul>
+              <div class="border-t border-gray-100 pt-5 flex flex-col gap-2">
+                <button type="button" data-action="open-constructor" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl shadow-md transition-all flex justify-center items-center">
+                  <i class="ph ph-list-numbers mr-2" aria-hidden="true"></i> Смета-конструктор
+                </button>
+                <button type="button" data-action="generate-contract" data-idempotent class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-3 rounded-xl shadow-md transition-all flex justify-center items-center">
+                  <i class="ph ph-file-text mr-2" aria-hidden="true"></i> Сгенерировать договор
+                </button>
+                <button type="button" data-action="sign-eds" class="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-3 rounded-xl transition-all flex justify-center items-center">
+                  <i class="ph ph-seal-check mr-2" aria-hidden="true"></i> Подписать через ЭЦП
+                </button>
+                <button type="button" data-action="open-1c-export" class="w-full bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold py-3 rounded-xl transition-all flex justify-center items-center">
+                  <i class="ph ph-export mr-2" aria-hidden="true"></i> Экспорт в 1С / Диадок
+                </button>
+                <button type="button" data-action="confirm-cancel-tender" class="w-full text-red-500 hover:bg-red-50 font-semibold py-3 rounded-xl transition-all flex justify-center items-center text-sm">
+                  <i class="ph ph-x-circle mr-2" aria-hidden="true"></i> Отменить тендер
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CRM / KANBAN ============ -->
+    <section id="tab-projects" class="tab-content h-full flex-col" data-title="Мои проекты (CRM)" data-display="flex" aria-labelledby="header-title">
+      <div class="w-full flex flex-col h-full">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-end gap-3 mb-6 opacity-0 animate-fade-in-up">
+          <div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-2">Мои проекты (CRM)</h2>
+            <p class="text-slate-500">Перетаскивайте карточки. Клавиатура: Tab → Enter → стрелки → Enter.</p>
+          </div>
+        </div>
+        <div class="flex-1 overflow-x-auto flex gap-6 pb-6 opacity-0 animate-fade-in-up delay-100" data-kanban>
+          <div class="kanban-col bg-gray-50/80 rounded-2xl border border-gray-200 p-4 flex flex-col h-full max-h-[70vh] min-w-[320px]">
+            <h3 class="font-bold text-slate-700 mb-4">Согласование 3D <span class="ml-2 bg-white text-slate-600 text-xs px-2 py-0.5 rounded-full border" data-count>1</span></h3>
+            <div class="flex-1 overflow-y-auto space-y-3 kanban-dropzone" data-dropzone tabindex="0" role="list" aria-label="Согласование">
+              <article class="kanban-card bg-white p-4 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-brand-500 cursor-grab" draggable="true" tabindex="0" aria-grabbed="false" role="listitem">
+                <h4 class="font-bold text-slate-800 text-sm mb-1">Эксклюзив Газпром</h4>
+                <p class="text-xs text-slate-500">Ждем финальные правки</p>
+              </article>
+            </div>
+          </div>
+          <div class="kanban-col bg-gray-50/80 rounded-2xl border border-gray-200 p-4 flex flex-col h-full max-h-[70vh] min-w-[320px]">
+            <h3 class="font-bold text-slate-700 mb-4">Производство <span class="ml-2 bg-white text-slate-600 text-xs px-2 py-0.5 rounded-full border" data-count>1</span></h3>
+            <div class="flex-1 overflow-y-auto space-y-3 kanban-dropzone" data-dropzone tabindex="0" role="list" aria-label="Производство">
+              <article class="kanban-card bg-white p-4 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-amber-500 cursor-grab" draggable="true" tabindex="0" aria-grabbed="false" role="listitem">
+                <h4 class="font-bold text-slate-800 text-sm mb-1">Стенд Яндекс</h4>
+                <p class="text-xs text-slate-500 mb-2">Распил ЛДФ</p>
+                <div class="progress" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"><div class="progress__bar" style="--progress: 45%"></div></div>
+              </article>
+            </div>
+          </div>
+          <div class="kanban-col bg-gray-50/80 rounded-2xl border border-gray-200 p-4 flex flex-col h-full max-h-[70vh] min-w-[320px]">
+            <h3 class="font-bold text-slate-700 mb-4">Монтаж <span class="ml-2 bg-white text-slate-600 text-xs px-2 py-0.5 rounded-full border" data-count>0</span></h3>
+            <div class="flex-1 overflow-y-auto space-y-3 kanban-dropzone rounded-xl" data-dropzone tabindex="0" role="list" aria-label="Монтаж">
+              <div class="border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center bg-gray-50/50 min-h-[120px]"><p class="text-xs text-slate-400">Перетащите карточку</p></div>
+            </div>
+          </div>
+          <div class="kanban-col bg-gray-50/80 rounded-2xl border border-gray-200 p-4 flex flex-col h-full max-h-[70vh] min-w-[320px]">
+            <h3 class="font-bold text-slate-700 mb-4">Закрывающие <span class="ml-2 bg-white text-slate-600 text-xs px-2 py-0.5 rounded-full border" data-count>0</span></h3>
+            <div class="flex-1 overflow-y-auto space-y-3 kanban-dropzone" data-dropzone tabindex="0" role="list" aria-label="Закрывающие"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CREATE (WIZARD) ============ -->
+    <section id="tab-create" class="tab-content max-w-4xl mx-auto" data-title="Размещение заказа" aria-labelledby="header-title">
+      <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-slate-50 border-b border-gray-200 px-8 py-6">
+          <h2 class="text-2xl font-bold text-slate-800 flex items-center"><i class="ph ph-note-pencil text-brand-500 mr-3 text-3xl" aria-hidden="true"></i> Публикация нового заказа</h2>
+          <p class="text-sm text-slate-500 mt-1">Шаг <span data-wizard-current>1</span> из 4</p>
+          <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden"><div id="wizard-progress" class="h-full bg-brand-600 transition-all" style="width:25%"></div></div>
+        </div>
+        <form data-action="submit-tender" id="wizard-form" class="p-8 space-y-8" novalidate>
+          <div class="wizard-step is-active" data-step="1">
+            <h3 class="text-lg font-bold text-slate-800 mb-4">1. Площадка</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div><label for="f-title" class="block text-sm font-semibold text-slate-700 mb-2">Название</label><input id="f-title" name="title" type="text" required placeholder="Название проекта" class="input-light w-full rounded-xl px-4 py-3"></div>
+              <div><label for="f-venue" class="block text-sm font-semibold text-slate-700 mb-2">Комплекс</label>
+                <select id="f-venue" name="venue" required class="input-light w-full rounded-xl px-4 py-3 bg-white">
+                  <option value="" disabled selected>Выберите...</option>
+                  <option>Крокус Экспо</option><option>ЦВК Экспоцентр</option><option>Экспофорум</option><option>ВДНХ</option><option>Другая</option>
+                </select>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center gap-2">
+              <input type="checkbox" id="f-private" name="private" class="rounded">
+              <label for="f-private" class="text-sm text-slate-600">Закрытый тендер (только для приглашённых)</label>
+            </div>
+          </div>
+          <div class="wizard-step" data-step="2">
+            <h3 class="text-lg font-bold text-slate-800 mb-4">2. Параметры</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div><label for="f-budget" class="block text-sm font-semibold text-slate-700 mb-2">Бюджет (₽)</label><input id="f-budget" name="budget" type="number" min="0" class="input-light w-full rounded-xl px-4 py-3"></div>
+              <div><label for="f-area" class="block text-sm font-semibold text-slate-700 mb-2">Метраж (м²)</label><input id="f-area" name="area" type="number" min="1" required class="input-light w-full rounded-xl px-4 py-3"></div>
+              <div><label for="f-type" class="block text-sm font-semibold text-slate-700 mb-2">Тип</label>
+                <select id="f-type" name="type" class="input-light w-full rounded-xl px-4 py-3 bg-white">
+                  <option>Остров</option><option>Полуостров</option><option>Угловой</option><option>Линейный</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="wizard-step" data-step="3">
+            <h3 class="text-lg font-bold text-slate-800 mb-4">3. Документация</h3>
+            <label for="f-files" class="w-full bg-slate-50 border-dashed border-2 border-slate-300 rounded-2xl p-10 flex flex-col items-center justify-center cursor-pointer group">
+              <span class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform"><i class="ph ph-cloud-arrow-up text-3xl text-brand-500" aria-hidden="true"></i></span>
+              <span class="text-slate-700 font-semibold mb-1">Нажмите или перетащите</span>
+              <span class="text-xs text-slate-500">PDF, DOCX, ZIP</span>
+              <input id="f-files" name="files" type="file" multiple class="sr-only">
+            </label>
+            <p id="files-count" class="text-xs text-slate-500 mt-3"></p>
+          </div>
+          <div class="wizard-step" data-step="4">
+            <h3 class="text-lg font-bold text-slate-800 mb-4">4. Проверьте</h3>
+            <dl class="bg-slate-50 rounded-2xl border border-gray-100 p-6 space-y-3 text-sm" id="wizard-review"></dl>
+          </div>
+          <div class="flex justify-between pt-4 border-t border-gray-100">
+            <button type="button" data-action="wizard-prev" class="px-5 py-3 rounded-xl border border-gray-200 text-slate-600 font-semibold disabled:opacity-40" disabled><i class="ph ph-arrow-left mr-2" aria-hidden="true"></i> Назад</button>
+            <div class="flex gap-3">
+              <button type="button" data-action="wizard-next" class="px-5 py-3 rounded-xl border border-gray-200 text-slate-600 font-semibold">Вперед <i class="ph ph-arrow-right ml-2" aria-hidden="true"></i></button>
+              <button type="submit" data-wizard-submit hidden class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-8 rounded-xl shadow-md flex items-center">Опубликовать <i class="ph ph-paper-plane-right ml-2" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ CHECK ============ -->
+    <section id="tab-check" class="tab-content max-w-3xl mx-auto text-center mt-10" data-title="Проверка контрагента" aria-labelledby="header-title">
+      <div class="w-20 h-20 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-emerald-100"><i class="ph ph-shield-check text-4xl text-emerald-500" aria-hidden="true"></i></div>
+      <h2 class="text-3xl font-bold text-slate-800 mb-3">Служба безопасности</h2>
+      <p class="text-slate-500 mb-10 max-w-lg mx-auto">Проверка по ФНС, ЕГРЮЛ, РНП, ФССП, арбитражу, санкционным спискам (OFAC/EU) и СМИ.</p>
+
+      <form data-action="check-contractor" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex flex-col sm:flex-row gap-3 max-w-xl mx-auto" novalidate>
+        <label for="inn-input" class="sr-only">ИНН</label>
+        <input id="inn-input" name="inn" type="text" inputmode="numeric" maxlength="12" placeholder="ИНН, например 7704376010" autocomplete="off" class="input-light flex-1 rounded-xl px-5 py-4 text-lg font-medium">
+        <button type="submit" data-role="check-submit" class="bg-slate-800 hover:bg-slate-900 disabled:opacity-50 text-white font-semibold py-4 px-8 rounded-xl shadow-md">Проверить</button>
+      </form>
+      <p id="inn-error" hidden class="text-sm text-red-500 mt-3" role="alert"></p>
+      <p class="text-xs text-slate-400 mt-3">Демо: <button type="button" data-action="fill-demo-inn" class="text-brand-600 font-semibold underline">7704376010</button></p>
+
+      <div id="check-result" hidden class="mt-10 max-w-3xl mx-auto text-left">
+        <div class="bg-white rounded-2xl border border-emerald-200 overflow-hidden shadow-lg relative">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-green-400" aria-hidden="true"></div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-6 flex-wrap gap-3">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 text-white flex items-center justify-center font-bold text-lg shadow-md">ДВ</div>
+                <div>
+                  <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">ООО «ДИВИЛЕКС» <i class="ph ph-seal-check text-emerald-500" data-tooltip="Проверенный контрагент"></i></h3>
+                  <p class="text-sm text-slate-500">ИНН: <span data-inn-echo>7704376010</span> · КПП 773601001 · ОГРН 1047796891234</p>
+                </div>
+              </div>
+              <span class="trust-badge trust-green"><i class="ph ph-shield-check" aria-hidden="true"></i> Зелёная зона</span>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-gray-100 pt-6 mb-6">
+              <div><p class="text-xs text-slate-400 uppercase mb-1">Статус</p><p class="font-medium text-emerald-600 flex items-center gap-1"><i class="ph ph-check-circle" aria-hidden="true"></i> Действующая</p></div>
+              <div><p class="text-xs text-slate-400 uppercase mb-1">Год основания</p><p class="font-medium text-slate-800">2004</p></div>
+              <div><p class="text-xs text-slate-400 uppercase mb-1">Сотрудников</p><p class="font-medium text-slate-800">340+</p></div>
+              <div><p class="text-xs text-slate-400 uppercase mb-1">Опыт</p><p class="font-medium text-slate-800">21 год</p></div>
+            </div>
+
+            <div class="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-5 mb-6">
+              <h4 class="text-xs font-bold text-emerald-700 uppercase mb-4 flex items-center gap-2"><i class="ph ph-chart-line-up" aria-hidden="true"></i> Финансовые показатели</h4>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div><p class="text-xs text-slate-500 mb-1">Выручка 2025</p><p class="text-lg font-bold text-emerald-700">4.8 млрд ₽</p></div>
+                <div><p class="text-xs text-slate-500 mb-1">Выручка 2024</p><p class="text-lg font-bold text-slate-800">3.9 млрд ₽</p></div>
+                <div><p class="text-xs text-slate-500 mb-1">Уставный капитал</p><p class="text-lg font-bold text-slate-800">100 млн ₽</p></div>
+                <div><p class="text-xs text-slate-500 mb-1">Динамика</p><p class="text-lg font-bold text-emerald-600 flex items-center gap-1"><i class="ph ph-trend-up" aria-hidden="true"></i> +23%</p></div>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-5 mb-6">
+              <h4 class="text-xs font-bold text-slate-600 uppercase mb-4 flex items-center gap-2"><i class="ph ph-check-square" aria-hidden="true"></i> Источники проверки</h4>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="flex items-center gap-2 text-xs"><i class="ph ph-check-circle text-emerald-500 text-base" aria-hidden="true"></i><span>ФНС / ЕГРЮЛ</span></div>
+                <div class="flex items-center gap-2 text-xs"><i class="ph ph-check-circle text-emerald-500 text-base" aria-hidden="true"></i><span>ФССП</span></div>
+                <div class="flex items-center gap-2 text-xs"><i class="ph ph-check-circle text-emerald-500 text-base" aria-hidden="true"></i><span>Арбитраж</span></div>
+                <div class="flex items-center gap-2 text-xs"><i class="ph ph-check-circle text-emerald-500 text-base" aria-hidden="true"></i><span>РНП</span></div>
+                <div class="flex items-center gap-2 text-xs"><i class="ph ph-check-circle text-emerald-500 text-base" aria-hidden="true"></i><span>OFAC / EU</span></div>
+                <div class="flex items-center gap-2 text-xs"><i class="ph ph-check-circle text-emerald-500 text-base" aria-hidden="true"></i><span>Картотека</span></div>
+                <div class="flex items-center gap-2 text-xs"><i class="ph ph-check-circle text-emerald-500 text-base" aria-hidden="true"></i><span>Реестр МСП</span></div>
+                <div class="flex items-center gap-2 text-xs"><i class="ph ph-check-circle text-emerald-500 text-base" aria-hidden="true"></i><span>СМИ и отзывы</span></div>
+              </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-100 rounded-2xl p-5 mb-6">
+              <h4 class="text-xs font-bold text-amber-700 uppercase mb-3 flex items-center gap-2"><i class="ph ph-newspaper" aria-hidden="true"></i> Мониторинг СМИ</h4>
+              <p class="text-xs text-slate-700 mb-2"><span class="font-semibold">Упоминаний за 12 месяцев:</span> 47 · <span class="text-emerald-600 font-semibold">38 позитивных</span> · <span class="text-slate-600">9 нейтральных</span> · <span class="text-emerald-600 font-semibold">0 негативных</span></p>
+              <p class="text-xs text-slate-600 italic">«ДИВИЛЕКС выиграл тендер на застройку павильона Росатома на Атомэкспо-2026» — Expo News, июнь 2026</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-gray-100 pt-6 mb-6">
+              <div><p class="text-xs text-slate-400 uppercase mb-1">Сделок</p><p class="font-medium text-slate-800">128</p></div>
+              <div><p class="text-xs text-slate-400 uppercase mb-1">Рейтинг</p><p class="font-medium text-slate-800 flex items-center gap-1">4.9 <i class="ph-fill ph-star text-amber-400" aria-hidden="true"></i></p></div>
+              <div><p class="text-xs text-slate-400 uppercase mb-1">Отзывов</p><p class="font-medium text-slate-800">214</p></div>
+              <div><p class="text-xs text-slate-400 uppercase mb-1">Ср. чек / м²</p><p class="font-medium text-slate-800">68 400 ₽</p></div>
+            </div>
+
+            <div class="border-t border-gray-100 pt-6 flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full"><i class="ph ph-check" aria-hidden="true"></i> НДС</span>
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full"><i class="ph ph-check" aria-hidden="true"></i> ISO 9001</span>
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full"><i class="ph ph-check" aria-hidden="true"></i> Член РСВЯ</span>
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full"><i class="ph ph-certificate" aria-hidden="true"></i> Expoforum</span>
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full"><i class="ph ph-certificate" aria-hidden="true"></i> Крокус Экспо</span>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-gray-100 flex flex-col sm:flex-row gap-3">
+              <button type="button" data-action="open-contractor" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-xl flex items-center justify-center"><i class="ph ph-user mr-2" aria-hidden="true"></i> Профиль</button>
+              <button type="button" data-action="generate-contract" data-idempotent class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-3 rounded-xl flex items-center justify-center"><i class="ph ph-file-text mr-2" aria-hidden="true"></i> Договор</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="check-loader" hidden class="mt-12 flex flex-col items-center">
+        <div class="w-10 h-10 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin mb-3" aria-hidden="true"></div>
+        <p class="text-slate-500 text-sm">Опрос 8 источников...</p>
+      </div>
+    </section>
+
+    <!-- ============ SUBCONTRACT ============ -->
+    <section id="tab-subcontract" class="tab-content max-w-7xl mx-auto" data-title="Биржа субподряда" aria-labelledby="header-title">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 opacity-0 animate-fade-in-up gap-4">
+        <div><h2 class="text-3xl font-bold text-slate-800 mb-2">Биржа субподряда</h2><p class="text-slate-500">Аренда оборудования, флористика, клининг, персонал.</p></div>
+        <button type="button" data-action="toast-info" data-message="Открытие формы..." class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 px-6 rounded-xl shadow-md flex items-center"><i class="ph ph-plus mr-2" aria-hidden="true"></i> Создать заявку</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="subcontract-list"></div>
+    </section>
+
+    <!-- ============ MEDIA LIBRARY ============ -->
+    <section id="tab-media" class="tab-content max-w-7xl mx-auto" data-title="Медиатека решений" aria-labelledby="header-title">
+      <div class="mb-8 opacity-0 animate-fade-in-up">
+        <h2 class="text-3xl font-bold text-slate-800 mb-2">Медиатека решений</h2>
+        <p class="text-slate-500">База реализованных стендов.</p>
+      </div>
+      <div class="flex flex-wrap gap-3 mb-6 opacity-0 animate-fade-in-up delay-100">
+        <label for="media-area" class="sr-only">Метраж</label>
+        <select id="media-area" class="input-light rounded-xl px-4 py-2 text-sm bg-white">
+          <option value="">Метраж — любой</option>
+          <option value="0-100">до 100 м²</option>
+          <option value="100-200">100–200 м²</option>
+          <option value="200-999">200+ м²</option>
+        </select>
+        <label for="media-budget" class="sr-only">Бюджет</label>
+        <select id="media-budget" class="input-light rounded-xl px-4 py-2 text-sm bg-white">
+          <option value="">Бюджет — любой</option>
+          <option value="0-5000000">до 5 млн ₽</option>
+          <option value="5000000-10000000">5–10 млн ₽</option>
+          <option value="10000000-999999999">10+ млн ₽</option>
+        </select>
+        <label for="media-q" class="sr-only">Поиск</label>
+        <input id="media-q" type="search" placeholder="Поиск..." class="input-light rounded-xl px-4 py-2 text-sm flex-1 min-w-[200px]">
+      </div>
+      <div id="media-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </section>
+
+    <!-- ============ EXHIBITIONS CALENDAR ============ -->
+    <section id="tab-exhibitions" class="tab-content max-w-7xl mx-auto" data-title="Календарь выставок" aria-labelledby="header-title">
+      <div class="mb-8 opacity-0 animate-fade-in-up">
+        <h2 class="text-3xl font-bold text-slate-800 mb-2">Календарь выставок</h2>
+        <p class="text-slate-500">Дедлайны и сроки монтажа.</p>
+      </div>
+      <div id="exhibitions-list" class="space-y-4"></div>
+    </section>
+
+    <!-- ============ ANALYTICS ============ -->
+    <section id="tab-analytics" class="tab-content max-w-7xl mx-auto" data-title="Аналитика рынка" aria-labelledby="header-title">
+      <div class="mb-8 opacity-0 animate-fade-in-up">
+        <h2 class="text-3xl font-bold text-slate-800 mb-2">Аналитика рынка</h2>
+        <p class="text-slate-500">Бенчмарки по метражу, бюджетам и подрядчикам.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <p class="text-sm text-slate-500 mb-3">Средняя цена / м² островного стенда</p>
+          <p class="text-3xl font-bold text-slate-800 mb-1">74 000 ₽</p>
+          <p class="text-xs text-emerald-600 font-semibold flex items-center gap-1"><i class="ph ph-trend-down" aria-hidden="true"></i> -3% к 2025</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <p class="text-sm text-slate-500 mb-3">Средний срок застройки</p>
+          <p class="text-3xl font-bold text-slate-800 mb-1">38 дней</p>
+          <p class="text-xs text-slate-500">от подписания до сдачи</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <p class="text-sm text-slate-500 mb-3">Конкуренция за тендер</p>
+          <p class="text-3xl font-bold text-slate-800 mb-1">6.2</p>
+          <p class="text-xs text-slate-500">заявок в среднем</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-gray-100">
+          <h3 class="font-bold text-slate-800 mb-4">Ваш тендер vs рынок</h3>
+          <div class="space-y-4">
+            <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-500">Ваш бюджет / м²</span><span class="font-bold">74 000 ₽</span></div><div class="progress"><div class="progress__bar" style="--progress: 74%; background:#3b82f6"></div></div></div>
+            <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-500">Средняя по рынку</span><span class="font-bold">70 500 ₽</span></div><div class="progress"><div class="progress__bar" style="--progress: 70%; background:#94a3b8"></div></div></div>
+            <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-500">Медиана 2025</span><span class="font-bold">68 200 ₽</span></div><div class="progress"><div class="progress__bar" style="--progress: 68%; background:#cbd5e1"></div></div></div>
+          </div>
+          <p class="text-xs text-slate-500 mt-4 pt-4 border-t">Ваш тендер на <span class="text-amber-600 font-bold">+5%</span> выше средней по рынку.</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100">
+          <h3 class="font-bold text-slate-800 mb-4">Топ-5 подрядчиков по метражу</h3>
+          <div id="top-contractors"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ AUDIT ============ -->
+    <section id="tab-audit" class="tab-content max-w-5xl mx-auto" data-title="Журнал действий" aria-labelledby="header-title">
+      <div class="mb-8 flex justify-between items-end gap-4 flex-wrap opacity-0 animate-fade-in-up">
+        <div><h2 class="text-3xl font-bold text-slate-800 mb-2">Журнал действий</h2><p class="text-slate-500">Все действия команды.</p></div>
+        <button type="button" data-action="export-audit-csv" class="px-4 py-2 text-sm bg-white border border-gray-200 rounded-lg text-slate-600 hover:bg-gray-50 font-medium"><i class="ph ph-download-simple mr-2" aria-hidden="true"></i>Экспорт CSV</button>
+      </div>
+      <div class="flex flex-wrap gap-3 mb-6 opacity-0 animate-fade-in-up delay-100">
+        <label for="audit-user" class="sr-only">Пользователь</label>
+        <select id="audit-user" class="input-light rounded-xl px-4 py-2 text-sm bg-white"><option value="">Все пользователи</option></select>
+        <label for="audit-type" class="sr-only">Тип</label>
+        <select id="audit-type" class="input-light rounded-xl px-4 py-2 text-sm bg-white">
+          <option value="">Все типы</option><option value="tender">Тендеры</option><option value="team">Команда</option><option value="system">Система</option>
+        </select>
+      </div>
+      <div id="audit-full-list" class="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-100"></div>
+    </section>
+
+    <!-- ============ NOTIFICATIONS ============ -->
+    <section id="tab-notifications" class="tab-content max-w-4xl mx-auto" data-title="Уведомления" aria-labelledby="header-title">
+      <div class="flex flex-col md:flex-row md:justify-between md:items-end gap-3 mb-6">
+        <div><h2 class="text-3xl font-bold text-slate-800 mb-2">Уведомления</h2><p class="text-slate-500">События и системные оповещения.</p></div>
+        <button type="button" data-action="mark-read" class="px-4 py-2 text-sm bg-white border border-gray-200 rounded-lg text-slate-600 font-medium"><i class="ph ph-check mr-2" aria-hidden="true"></i>Прочитано</button>
+      </div>
+      <div class="flex gap-2 mb-4 flex-wrap">
+        <button type="button" data-action="filter-notifs" data-filter="all" aria-selected="true" class="notif-filter px-3 py-1.5 rounded-lg text-sm font-semibold bg-brand-50 text-brand-600">Все</button>
+        <button type="button" data-action="filter-notifs" data-filter="unread" aria-selected="false" class="notif-filter px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-500">Непрочитанные</button>
+        <button type="button" data-action="filter-notifs" data-filter="tenders" aria-selected="false" class="notif-filter px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-500">Тендеры</button>
+        <button type="button" data-action="filter-notifs" data-filter="messages" aria-selected="false" class="notif-filter px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-500">Сообщения</button>
+      </div>
+      <div id="notifs-full-list" class="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-100 overflow-hidden"></div>
+    </section>
+
+    <!-- ============ PROFILE ============ -->
+    <section id="tab-profile" class="tab-content max-w-5xl mx-auto" data-title="Профиль и команда" aria-labelledby="header-title">
+      <div class="mb-8"><h2 class="text-3xl font-bold text-slate-800 mb-2">Профиль и команда</h2><p class="text-slate-500">Реквизиты, команда, интеграции.</p></div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-1 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center font-bold text-2xl shadow-lg mb-4">ГС</div>
+          <h3 class="text-lg font-bold text-slate-800 mb-1 flex items-center gap-2">ООО "ГлавСтройЭкспо" <i class="ph ph-seal-check text-emerald-500" data-tooltip="ЕСИА"></i></h3>
+          <p class="text-xs text-slate-500 mb-4">ИНН 7712345678 · ОГРН 1157746123456</p>
+          <dl class="space-y-2 text-sm">
+            <div class="flex justify-between"><dt class="text-slate-500">Тариф</dt><dd class="font-semibold text-slate-800">Business</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Сотрудников</dt><dd class="font-semibold text-slate-800">12</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Сделок</dt><dd class="font-semibold text-slate-800">42</dd></div>
+          </dl>
+        </div>
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-bold text-slate-800">Команда и роли</h3>
+              <button type="button" data-action="open-invite" class="text-xs font-semibold text-brand-600 hover:text-brand-700"><i class="ph ph-user-plus mr-1" aria-hidden="true"></i>Пригласить</button>
+            </div>
+            <ul class="space-y-3" id="team-list"></ul>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <h3 class="font-bold text-slate-800 mb-4">Интеграции</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <button type="button" data-action="connect-1c" class="p-3 rounded-xl border border-gray-200 hover:border-brand-300 text-left">
+                <i class="ph ph-database text-2xl text-amber-500" aria-hidden="true"></i>
+                <p class="text-sm font-semibold text-slate-800 mt-2">1С: Бухгалтерия</p>
+                <p class="text-[10px] text-slate-500">Экспорт счетов</p>
+              </button>
+              <button type="button" data-action="connect-1c" class="p-3 rounded-xl border border-gray-200 hover:border-brand-300 text-left">
+                <i class="ph ph-file-text text-2xl text-blue-500" aria-hidden="true"></i>
+                <p class="text-sm font-semibold text-slate-800 mt-2">Диадок</p>
+                <p class="text-[10px] text-slate-500">ЭДО</p>
+              </button>
+              <button type="button" data-action="connect-telegram" class="p-3 rounded-xl border border-gray-200 hover:border-brand-300 text-left">
+                <i class="ph ph-telegram-logo text-2xl text-sky-500" aria-hidden="true"></i>
+                <p class="text-sm font-semibold text-slate-800 mt-2">Telegram-бот</p>
+                <p class="text-[10px] text-slate-500">Уведомления</p>
+              </button>
+              <button type="button" data-action="connect-1c" class="p-3 rounded-xl border border-gray-200 hover:border-brand-300 text-left">
+                <i class="ph ph-calendar-dots text-2xl text-purple-500" aria-hidden="true"></i>
+                <p class="text-sm font-semibold text-slate-800 mt-2">Google Calendar</p>
+                <p class="text-[10px] text-slate-500">Дедлайны</p>
+              </button>
+              <button type="button" data-action="connect-1c" class="p-3 rounded-xl border border-gray-200 hover:border-brand-300 text-left">
+                <i class="ph ph-signature text-2xl text-emerald-500" aria-hidden="true"></i>
+                <p class="text-sm font-semibold text-slate-800 mt-2">Контур.Подпись</p>
+                <p class="text-[10px] text-slate-500">ЭЦП</p>
+              </button>
+              <button type="button" data-action="copy-api" class="p-3 rounded-xl border border-gray-200 hover:border-brand-300 text-left">
+                <i class="ph ph-code text-2xl text-slate-500" aria-hidden="true"></i>
+                <p class="text-sm font-semibold text-slate-800 mt-2">API-ключ</p>
+                <p class="text-[10px] text-slate-500">REST API</p>
+              </button>
+            </div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <h3 class="font-bold text-slate-800 mb-4">История цен подрядчиков</h3>
+            <svg viewBox="0 0 400 120" class="w-full" style="height:120px" aria-hidden="true">
+              <polyline points="20,80 80,70 140,55 200,60 260,45 320,35 380,30" fill="none" stroke="#2563eb" stroke-width="2"/>
+              <polyline points="20,80 80,70 140,55 200,60 260,45 320,35 380,30 380,120 20,120" fill="rgba(37,99,235,.08)"/>
+              <text x="20" y="115" font-size="9" fill="#94a3b8">2020</text>
+              <text x="200" y="115" font-size="9" fill="#94a3b8">2023</text>
+              <text x="370" y="115" font-size="9" fill="#94a3b8">2026</text>
+            </svg>
+            <p class="text-xs text-slate-500 mt-2">Средний чек ООО «ДИВИЛЕКС» за м²: <span class="font-bold text-slate-700">68 400 ₽</span> (+18% за 5 лет)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ============ SLIDE: CONTRACTOR ============ -->
+<div id="modal-backdrop" class="backdrop fixed inset-0 bg-slate-900/40 z-40" data-action="close-contractor" aria-hidden="true"></div>
+<aside id="contractor-panel" class="slide-panel fixed top-0 right-0 h-full w-full md:w-[480px] bg-white shadow-2xl z-50 flex flex-col" role="dialog" aria-modal="true" aria-hidden="true">
+  <header class="h-20 border-b border-gray-100 flex items-center justify-between px-6 bg-slate-50">
+    <h2 class="font-bold text-lg text-slate-800">Профиль застройщика</h2>
+    <button type="button" data-action="close-contractor" class="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-slate-500 hover:text-red-500" aria-label="Закрыть"><i class="ph ph-x" aria-hidden="true"></i></button>
+  </header>
+  <div class="flex-1 overflow-y-auto p-6">
+    <div class="flex items-center mb-6">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 text-white flex items-center justify-center font-bold text-2xl shadow-sm">ДВ</div>
+      <div class="ml-4">
+        <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">ООО «ДИВИЛЕКС» <i class="ph ph-seal-check text-emerald-500" aria-hidden="true"></i></h3>
+        <p class="text-sm text-slate-500">ИНН 7704376010 · 21 год на рынке</p>
+      </div>
+    </div>
+    <div class="flex gap-4 mb-6">
+      <div class="flex-1 bg-emerald-50 rounded-xl p-4 border border-emerald-100 text-center"><p class="text-xs text-emerald-700 font-bold uppercase mb-1">Рейтинг</p><p class="text-2xl font-bold text-slate-800 flex justify-center items-center">4.9 <i class="ph-fill ph-star text-amber-400 ml-1" aria-hidden="true"></i></p></div>
+      <div class="flex-1 bg-brand-50 rounded-xl p-4 border border-brand-100 text-center"><p class="text-xs text-brand-700 font-bold uppercase mb-1">Сделок</p><p class="text-2xl font-bold text-slate-800">128</p></div>
+    </div>
+    <h3 class="font-bold text-slate-800 mb-3">Портфолио</h3>
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <img src="https://placehold.co/300x200/1e293b/ffffff?text=SBER" alt="Стенд Сбер" class="w-full h-24 rounded-xl object-cover" loading="lazy">
+      <img src="https://placehold.co/300x200/3b82f6/ffffff?text=VK" alt="Стенд VK" class="w-full h-24 rounded-xl object-cover" loading="lazy">
+    </div>
+  </div>
+  <footer class="p-6 border-t border-gray-100 bg-white">
+    <button type="button" data-action="generate-contract" data-idempotent class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3.5 rounded-xl shadow-md flex justify-center items-center">Выбрать исполнителем <i class="ph ph-handshake ml-2" aria-hidden="true"></i></button>
+  </footer>
+</aside>
+
+<!-- ============ COMMAND PALETTE ============ -->
+<div id="cmd-backdrop" class="cmd-backdrop fixed inset-0 bg-slate-900/50 z-[80] backdrop-blur-sm" data-action="close-palette" aria-hidden="true">
+  <div class="max-w-xl mx-auto mt-32 mx-4">
+    <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+      <div class="flex items-center px-4 border-b border-gray-100">
+        <i class="ph ph-magnifying-glass text-slate-400 text-lg" aria-hidden="true"></i>
+        <label for="cmd-input" class="sr-only">Командная палитра</label>
+        <input id="cmd-input" type="text" placeholder="Поиск или команда..." autocomplete="off" class="w-full px-3 py-4 outline-none text-sm">
+        <kbd class="kbd">ESC</kbd>
+      </div>
+      <ul id="cmd-list" class="max-h-80 overflow-y-auto p-2" role="listbox"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CONSTRUCTOR ============ -->
+<div id="constructor-backdrop" class="backdrop fixed inset-0 bg-slate-900/40 z-40" data-action="close-constructor" aria-hidden="true"></div>
+<aside id="constructor-panel" class="slide-panel fixed top-0 right-0 h-full w-full md:w-[760px] bg-white shadow-2xl z-50 flex flex-col" role="dialog" aria-modal="true" aria-hidden="true">
+  <header class="h-20 border-b border-gray-100 flex items-center justify-between px-6 bg-slate-50">
+    <div>
+      <h2 class="font-bold text-lg text-slate-800">Смета-конструктор</h2>
+      <p class="text-xs text-slate-500">Соберите смету построчно</p>
+    </div>
+    <button type="button" data-action="close-constructor" class="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-slate-500 hover:text-red-500" aria-label="Закрыть"><i class="ph ph-x" aria-hidden="true"></i></button>
+  </header>
+  <div class="flex-1 overflow-y-auto p-6">
+    <div class="hidden md:grid mb-3 position-row text-[10px] font-bold uppercase text-slate-400">
+      <span>Позиция</span><span class="text-center">Ед.</span><span class="text-right">Кол-во</span><span class="text-right">Цена</span><span class="text-right">Сумма</span><span></span>
+    </div>
+    <div id="constructor-items" class="space-y-2 mb-4"></div>
+    <div class="flex gap-2">
+      <button type="button" data-action="add-quote-item" class="px-4 py-2 rounded-xl bg-brand-50 text-brand-700 font-semibold text-sm flex items-center gap-1"><i class="ph ph-plus" aria-hidden="true"></i>Добавить позицию</button>
+      <button type="button" data-action="load-quote-template" class="px-4 py-2 rounded-xl bg-gray-50 text-slate-600 font-semibold text-sm flex items-center gap-1"><i class="ph ph-magic-wand" aria-hidden="true"></i>Загрузить шаблон</button>
+    </div>
+  </div>
+  <footer class="p-6 border-t border-gray-100 bg-white">
+    <div class="flex justify-between items-center mb-4">
+      <div class="text-sm text-slate-500">Подытог:</div>
+      <div class="text-2xl font-bold text-slate-800" id="quote-total">0 ₽</div>
+    </div>
+    <div class="flex justify-between items-center mb-5 text-sm">
+      <div class="text-slate-500">НДС 20%:</div>
+      <div class="font-semibold text-slate-700" id="quote-vat">0 ₽</div>
+    </div>
+    <button type="button" data-action="save-quote" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 rounded-xl shadow-md flex justify-center items-center">Сохранить и отправить заказчику <i class="ph ph-paper-plane-right ml-2" aria-hidden="true"></i></button>
+  </footer>
+</aside>
+
+<!-- ============ COMPARE TENDERS MODAL ============ -->
+<dialog id="compare-tenders-dialog" class="rounded-2xl p-0 max-w-4xl w-[95vw] bg-white shadow-2xl backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm">
+  <div class="flex items-center justify-between p-5 border-b border-gray-100">
+    <h3 class="font-bold text-lg text-slate-800">Сравнение тендеров</h3>
+    <button type="button" data-action="close-compare-tenders" class="w-8 h-8 rounded-full hover:bg-gray-100 text-slate-500" aria-label="Закрыть"><i class="ph ph-x" aria-hidden="true"></i></button>
+  </div>
+  <div class="p-6 overflow-x-auto max-h-[70vh]">
+    <div id="compare-tenders-content"></div>
+  </div>
+</dialog>
+
+<!-- ============ INVITE MODAL ============ -->
+<dialog id="invite-dialog" class="rounded-2xl p-0 max-w-md w-[92vw] bg-white shadow-2xl backdrop:bg-slate-900/60">
+  <form data-action="submit-invite" class="p-6">
+    <h3 class="font-bold text-lg text-slate-800 mb-1">Пригласить в команду</h3>
+    <p class="text-xs text-slate-500 mb-4">Отправим письмо со ссылкой для входа.</p>
+    <label for="invite-email" class="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+    <input id="invite-email" type="email" required placeholder="colleague@company.ru" class="input-light w-full rounded-xl px-4 py-3 mb-3">
+    <label for="invite-role" class="block text-sm font-semibold text-slate-700 mb-2">Роль</label>
+    <select id="invite-role" class="input-light w-full rounded-xl px-4 py-3 bg-white mb-5">
+      <option value="manager">Менеджер тендеров</option>
+      <option value="finance">Финансы</option>
+      <option value="viewer">Наблюдатель</option>
+      <option value="admin">Администратор</option>
+    </select>
+    <div class="flex justify-end gap-3">
+      <button type="button" data-action="close-invite" class="px-4 py-2.5 rounded-xl border border-gray-200 text-slate-600 font-semibold">Отмена</button>
+      <button type="submit" class="px-5 py-2.5 rounded-xl bg-brand-600 text-white font-semibold">Пригласить</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ============ SEARCH HELP ============ -->
+<dialog id="search-help-dialog" class="rounded-2xl p-0 max-w-lg w-[92vw] bg-white shadow-2xl backdrop:bg-slate-900/60">
+  <div class="p-6">
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="font-bold text-lg text-slate-800">Расширенный поиск</h3>
+      <button type="button" data-action="close-search-help" class="w-8 h-8 rounded-full hover:bg-gray-100 text-slate-500" aria-label="Закрыть"><i class="ph ph-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="space-y-3 text-sm">
+      <div class="flex items-center gap-3"><code class="kbd">газпром</code><span class="text-slate-600">полнотекстовый</span></div>
+      <div class="flex items-center gap-3"><code class="kbd">площадь:>200</code><span class="text-slate-600">площадь больше 200</span></div>
+      <div class="flex items-center gap-3"><code class="kbd">бюджет:10000000..20000000</code><span class="text-slate-600">диапазон</span></div>
+      <div class="flex items-center gap-3"><code class="kbd">статус:активный</code><span class="text-slate-600">активные</span></div>
+      <div class="flex items-center gap-3"><code class="kbd">тег:LED</code><span class="text-slate-600">по тегу</span></div>
+    </div>
+  </div>
+</dialog>
+
+<!-- ============ 1C EXPORT MODAL ============ -->
+<dialog id="export1c-dialog" class="rounded-2xl p-0 max-w-md w-[92vw] bg-white shadow-2xl backdrop:bg-slate-900/60">
+  <div class="p-6">
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="font-bold text-lg text-slate-800">Экспорт в 1С / Диадок</h3>
+      <button type="button" data-action="close-1c-export" class="w-8 h-8 rounded-full hover:bg-gray-100 text-slate-500" aria-label="Закрыть"><i class="ph ph-x" aria-hidden="true"></i></button>
+    </div>
+    <p class="text-sm text-slate-500 mb-4">Выберите систему для выгрузки счёта и акта.</p>
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <button type="button" data-action="do-export" data-target="1C" class="p-4 rounded-xl border border-gray-200 hover:border-brand-300 text-center"><i class="ph ph-database text-3xl text-amber-500" aria-hidden="true"></i><p class="text-sm font-semibold text-slate-800 mt-2">1С</p></button>
+      <button type="button" data-action="do-export" data-target="Диадок" class="p-4 rounded-xl border border-gray-200 hover:border-brand-300 text-center"><i class="ph ph-file-text text-3xl text-blue-500" aria-hidden="true"></i><p class="text-sm font-semibold text-slate-800 mt-2">Диадок</p></button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ============ FILTERS DRAWER ============ -->
+<div id="filters-backdrop" class="backdrop fixed inset-0 bg-slate-900/40 z-40" data-action="close-filters" aria-hidden="true"></div>
+<aside id="filters-panel" class="slide-panel fixed top-0 right-0 h-full w-full md:w-[400px] bg-white shadow-2xl z-50 flex flex-col" role="dialog" aria-modal="true" aria-hidden="true">
+  <header class="h-20 border-b border-gray-100 flex items-center justify-between px-6 bg-slate-50">
+    <h2 class="font-bold text-lg text-slate-800">Фильтры</h2>
+    <button type="button" data-action="close-filters" class="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-slate-500" aria-label="Закрыть"><i class="ph ph-x" aria-hidden="true"></i></button>
+  </header>
+  <div class="flex-1 overflow-y-auto p-6 space-y-6">
+    <div><label for="f-status-filter" class="block text-sm font-semibold text-slate-700 mb-2">Статус</label>
+      <select id="f-status-filter" class="input-light w-full rounded-xl px-4 py-3 bg-white"><option value="">Любой</option><option value="active">Приём заявок</option><option value="analysis">Анализ</option><option value="closed">Закрыт</option></select>
+    </div>
+    <div><label for="f-budget-min" class="block text-sm font-semibold text-slate-700 mb-2">Бюджет от, ₽</label><input id="f-budget-min" type="number" min="0" class="input-light w-full rounded-xl px-4 py-3"></div>
+    <div><label for="f-area-min" class="block text-sm font-semibold text-slate-700 mb-2">Площадь от, м²</label><input id="f-area-min" type="number" min="0" class="input-light w-full rounded-xl px-4 py-3"></div>
+    <div><label for="f-q-filter" class="block text-sm font-semibold text-slate-700 mb-2">Поиск</label><input id="f-q-filter" type="search" class="input-light w-full rounded-xl px-4 py-3"></div>
+    <div class="flex items-center gap-2 pt-4 border-t">
+      <input type="checkbox" id="f-private-only" class="rounded"><label for="f-private-only" class="text-sm text-slate-600">Только закрытые</label>
+    </div>
+  </div>
+  <footer class="p-6 border-t border-gray-100 bg-white flex gap-3">
+    <button type="button" data-action="reset-filters" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-slate-600 font-semibold">Сбросить</button>
+    <button type="button" data-action="apply-filters" class="flex-1 px-4 py-3 rounded-xl bg-brand-600 text-white font-semibold">Применить</button>
+  </footer>
+</aside>
+
+<!-- ============ CONFIRM DIALOG ============ -->
+<dialog id="confirm-dialog" class="rounded-2xl p-0 max-w-md w-[92vw] bg-white shadow-2xl backdrop:bg-slate-900/50">
+  <div class="p-6">
+    <div class="flex items-start gap-4">
+      <div class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0"><i class="ph ph-warning text-2xl" aria-hidden="true"></i></div>
+      <div><h3 id="confirm-title" class="font-bold text-lg text-slate-800 mb-1">Подтвердите</h3><p id="confirm-text" class="text-sm text-slate-500">Это действие нельзя отменить.</p></div>
+    </div>
+    <div class="flex justify-end gap-3 mt-6">
+      <button type="button" id="confirm-cancel" class="px-4 py-2.5 rounded-xl border border-gray-200 text-slate-600 font-semibold">Отмена</button>
+      <button type="button" id="confirm-ok" class="px-5 py-2.5 rounded-xl bg-red-500 text-white font-semibold">Подтвердить</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ============ TOASTS ============ -->
+<div id="toast-container" class="fixed bottom-6 right-6 z-[90] flex flex-col gap-3" role="status" aria-live="polite"></div>
+
+<!-- ============ ONBOARDING ============ -->
+<div id="onboarding" hidden class="fixed inset-0 z-[95]">
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 max-w-md w-[92vw]">
+    <div class="flex justify-between items-start mb-3">
+      <h3 class="font-bold text-slate-800 text-lg" data-onboard-title>Добро пожаловать</h3>
+      <button type="button" data-action="onboard-skip" class="text-slate-400 text-sm font-semibold">Пропустить</button>
+    </div>
+    <p class="text-sm text-slate-600 mb-4" data-onboard-text></p>
+    <div class="flex justify-between items-center">
+      <div class="flex gap-1.5"><span class="wizard-dot is-active" data-onboard-dot="0"></span><span class="wizard-dot" data-onboard-dot="1"></span><span class="wizard-dot" data-onboard-dot="2"></span><span class="wizard-dot" data-onboard-dot="3"></span></div>
+      <button type="button" data-action="onboard-next" class="px-5 py-2.5 rounded-xl bg-brand-600 text-white font-semibold text-sm">Далее</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HOTKEY HINT ============ -->
+<div id="hotkey-hint" class="hotkey-hint" aria-hidden="true"></div>
+
+<script>
+(() => {
+'use strict';
+
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const debounce = (fn, d = 250) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), d); }; };
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtCurrency = (v) => new Intl.NumberFormat('ru-RU', { style:'currency', currency:'RUB', maximumFractionDigits:0 }).format(v);
+const fmtCompact = (v) => new Intl.NumberFormat('ru-RU', { style:'currency', currency:'RUB', notation:'compact', maximumFractionDigits:1 }).format(v);
+const fmtRel = (date) => {
+  const rtf = new Intl.RelativeTimeFormat('ru-RU', { numeric:'auto' });
+  const diff = (date.getTime() - Date.now()) / 1000;
+  const a = Math.abs(diff);
+  if (a < 60) return rtf.format(Math.round(diff), 'second');
+  if (a < 3600) return rtf.format(Math.round(diff / 60), 'minute');
+  if (a < 86400) return rtf.format(Math.round(diff / 3600), 'hour');
+  return rtf.format(Math.round(diff / 86400), 'day');
+};
+const isValidINN = (v) => {
+  const inn = String(v).trim();
+  if (!/^\d{10}$|^\d{12}$/.test(inn)) return false;
+  const d = inn.split('').map(Number);
+  const check = (c, dg) => ((c.reduce((a,x,i) => a + x*d[i], 0) % 11) % 10) === dg;
+  return inn.length === 10 ? check([2,4,10,3,5,9,4,6,8], d[9])
+    : check([7,2,4,10,3,5,9,4,6,8], d[10]) && check([3,7,2,4,10,3,5,9,4,6,8], d[11]);
+};
+const daysUntil = (iso) => Math.max(0, Math.ceil((new Date(iso + 'T23:59:59') - new Date()) / 86400000));
+
+/* =========================================================
+ * State
+ * ========================================================= */
+const A='active', AN='analysis', C='closed';
+const tendersData = [
+  { id:'gazprom', logo:'1e3a8a', ini:'GZ', org:'ПАО "Газпром"', event:'ПМЭФ 2027', title:'Эксклюзивный стенд 250 м²', budget:18500000, area:250, type:'Остров', deadline:'2026-11-12', status:A, tags:['Двухэтажный','LED'], bids:3, accent:'bg-blue-500', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'sber', logo:'16a34a', ini:'SB', org:'ПАО "Сбербанк"', event:'ПМЭФ 2027', title:'Двухэтажный интерактивный стенд', budget:25000000, area:300, type:'Остров', deadline:'2026-11-10', status:A, tags:['Биометрия','VR-зона'], bids:6, accent:'bg-green-600', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'vtb', logo:'1e40af', ini:'ВТ', org:'ПАО "ВТБ"', event:'ПМЭФ 2027', title:'Инвест-павильон ВТБ', budget:10200000, area:180, type:'Полуостров', deadline:'2026-11-15', status:A, tags:['Premium','Кинетика'], bids:4, accent:'bg-blue-700', statusLabel:'Сбор', statusColor:'emerald', private:true },
+  { id:'yandex', logo:'ef4444', ini:'YA', org:'ООО "Яндекс"', event:'РИФ 2026', title:'Островной стенд (Технологии)', budget:5200000, area:120, type:'Остров', deadline:'2026-12-01', status:AN, tags:['Нестандарт'], bids:8, accent:'bg-red-500', statusLabel:'Анализ', statusColor:'amber', private:false },
+  { id:'vk', logo:'60a5fa', ini:'VK', org:'VK', event:'VK Fest B2B', title:'Стенд B2B зоны VK Fest', budget:3500000, area:80, type:'Линейный', deadline:'2026-10-20', status:C, tags:['Улица','Неон'], bids:5, accent:'bg-blue-400', statusLabel:'Подписание', statusColor:'blue', private:false },
+  { id:'mts', logo:'e11d48', ini:'МТ', org:'ПАО "МТС"', event:'Связь-Экспокомм 2027', title:'Цифровая экосистема МТС', budget:7200000, area:150, type:'Остров', deadline:'2026-11-20', status:A, tags:['IoT','Умный дом'], bids:5, accent:'bg-rose-600', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'megafon', logo:'22c55e', ini:'МГ', org:'ПАО "МегаФон"', event:'Связь-Экспокомм 2027', title:'Зона 5G и VR', budget:6800000, area:140, type:'Полуостров', deadline:'2026-11-18', status:A, tags:['5G','VR'], bids:4, accent:'bg-emerald-500', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'beeline', logo:'facc15', ini:'БЛ', org:'ПАО "ВымпелКом"', event:'Связь-Экспокомм 2026', title:'Стенд-трансформер Билайн', budget:5400000, area:110, type:'Угловой', deadline:'2026-10-05', status:C, tags:['Трансформер'], bids:7, accent:'bg-yellow-400', statusLabel:'Закрыт', statusColor:'blue', private:false },
+  { id:'rostelecom', logo:'7c3aed', ini:'РТ', org:'ПАО "Ростелеком"', event:'Связь-Экспокомм 2027', title:'Павильон цифровых сервисов', budget:8700000, area:160, type:'Остров', deadline:'2026-11-22', status:A, tags:['Иммерсив','4K'], bids:6, accent:'bg-purple-600', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'severstal', logo:'1e293b', ini:'СВ', org:'АО "Северсталь"', event:'Металл-Экспо 2027', title:'Застройка Металл-Экспо', budget:0, area:180, type:'Полуостров', deadline:'2026-11-12', status:A, tags:['Металлокаркас','Подвес'], bids:1, accent:'bg-slate-800', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'nornickel', logo:'0891b2', ini:'НН', org:'ПАО "Норникель"', event:'Металл-Экспо 2027', title:'Полярный стенд', budget:9400000, area:200, type:'Остров', deadline:'2026-11-25', status:A, tags:['Эко','Видеостена'], bids:4, accent:'bg-cyan-600', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'rusal', logo:'dc2626', ini:'РС', org:'ОК "РУСАЛ"', event:'Металл-Экспо 2027', title:'Алюминиевый павильон', budget:6300000, area:130, type:'Полуостров', deadline:'2026-11-28', status:A, tags:['Металл','Дизайн'], bids:3, accent:'bg-red-700', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'evraz', logo:'78350f', ini:'ЕВ', org:'ЕВРАЗ', event:'Металл-Экспо 2027', title:'Стальной павильон', budget:5900000, area:120, type:'Угловой', deadline:'2026-11-30', status:A, tags:['Металлокаркас'], bids:2, accent:'bg-amber-800', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'nlmk', logo:'0369a1', ini:'НЛ', org:'ПАО "НЛМК"', event:'Металл-Экспо 2027', title:'Индустрия 4.0', budget:8100000, area:170, type:'Остров', deadline:'2026-11-26', status:A, tags:['IIoT'], bids:5, accent:'bg-sky-700', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'mmk', logo:'1e40af', ini:'ММ', org:'ПАО "ММК"', event:'Металл-Экспо 2026', title:'Магнитка будущего', budget:6700000, area:150, type:'Полуостров', deadline:'2026-10-08', status:C, tags:['Металл','Эко'], bids:6, accent:'bg-indigo-700', statusLabel:'Закрыт', statusColor:'blue', private:false },
+  { id:'polyus', logo:'ca8a04', ini:'ПЛ', org:'ПАО "Полюс"', event:'MiningWorld 2027', title:'Золото Сибири', budget:9800000, area:190, type:'Остров', deadline:'2026-12-05', status:A, tags:['Золото','Свет'], bids:4, accent:'bg-yellow-600', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'lukoil', logo:'b91c1c', ini:'ЛУ', org:'ПАО "ЛУКОЙЛ"', event:'Нефтегаз 2027', title:'Нефтегаз-2027: главный стенд', budget:15300000, area:280, type:'Остров', deadline:'2026-11-14', status:A, tags:['Двухэтажный','Кинетика'], bids:5, accent:'bg-red-600', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'rosneft', logo:'065f46', ini:'РН', org:'ПАО "Роснефть"', event:'Нефтегаз 2027', title:'Восточный павильон', budget:11000000, area:220, type:'Остров', deadline:'2026-11-16', status:A, tags:['Двухэтажный','Мультимедиа'], bids:7, accent:'bg-emerald-800', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'sibur', logo:'0ea5e9', ini:'СБ', org:'ПАО "СИБУР"', event:'Химия-2027', title:'Полимерный стенд', budget:7900000, area:170, type:'Полуостров', deadline:'2026-11-24', status:A, tags:['Полимеры','Интерактив'], bids:3, accent:'bg-sky-500', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'fosagro', logo:'15803d', ini:'ФА', org:'ПАО "ФосАгро"', event:'Золотая осень 2027', title:'Агро-павильон', budget:4500000, area:110, type:'Угловой', deadline:'2026-11-29', status:A, tags:['Агро','Природа'], bids:2, accent:'bg-green-700', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'tinkoff', logo:'facc15', ini:'ТБ', org:'АО "ТБанк"', event:'Finopolis 2027', title:'Финансовый павильон', budget:8300000, area:160, type:'Остров', deadline:'2026-11-21', status:A, tags:['Неон','LED'], bids:5, accent:'bg-yellow-400', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'alfa', logo:'dc2626', ini:'АБ', org:'АО "Альфа-Банк"', event:'Finopolis 2027', title:'Зона Alfa Only', budget:7600000, area:150, type:'Полуостров', deadline:'2026-11-23', status:A, tags:['Premium','VIP'], bids:4, accent:'bg-red-600', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'rzd', logo:'b91c1c', ini:'РЖ', org:'ОАО "РЖД"', event:'Транспорт России 2027', title:'Транспорт будущего', budget:14000000, area:240, type:'Остров', deadline:'2026-11-19', status:A, tags:['Двухэтажный'], bids:6, accent:'bg-red-700', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'aeroflot', logo:'1e40af', ini:'АФ', org:'ПАО "Аэрофлот"', event:'Wings of Russia 2027', title:'Premium лаунж', budget:5800000, area:120, type:'Угловой', deadline:'2026-12-02', status:AN, tags:['Premium'], bids:4, accent:'bg-blue-700', statusLabel:'Анализ', statusColor:'amber', private:false },
+  { id:'ozon', logo:'1d4ed8', ini:'OZ', org:'ООО "Озон"', event:'Ecom Expo 2027', title:'Остров e-com', budget:4900000, area:110, type:'Остров', deadline:'2026-11-27', status:A, tags:['E-com'], bids:3, accent:'bg-blue-600', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'wb', logo:'7e22ce', ini:'WB', org:'ООО "Вайлдберриз"', event:'Ecom Expo 2027', title:'Бренд-зона WB', budget:6100000, area:140, type:'Полуостров', deadline:'2026-12-03', status:AN, tags:['Мода','AR'], bids:5, accent:'bg-purple-700', statusLabel:'Анализ', statusColor:'amber', private:false },
+  { id:'x5', logo:'16a34a', ini:'X5', org:'X5 Group', event:'Retail Week 2027', title:'Ретейл-трансформер', budget:5600000, area:130, type:'Угловой', deadline:'2026-12-04', status:A, tags:['Трансформер'], bids:4, accent:'bg-green-600', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'magnit', logo:'dc2626', ini:'МГ', org:'ПАО "Магнит"', event:'Retail Week 2027', title:'Формат будущего', budget:4200000, area:100, type:'Линейный', deadline:'2026-12-06', status:AN, tags:['FoodTech'], bids:3, accent:'bg-red-500', statusLabel:'Анализ', statusColor:'amber', private:false },
+  { id:'lenta', logo:'0f766e', ini:'ЛН', org:'ООО "Лента"', event:'Retail Week 2027', title:'Умный гипермаркет', budget:3900000, area:95, type:'Линейный', deadline:'2026-12-07', status:A, tags:['Self-checkout'], bids:2, accent:'bg-teal-700', statusLabel:'Сбор', statusColor:'emerald', private:false },
+  { id:'rosatom', logo:'0ea5e9', ini:'РА', org:'ГК "Росатом"', event:'Атомэкспо 2027', title:'Атомный павильон', budget:12000000, area:220, type:'Остров', deadline:'2026-11-17', status:AN, tags:['Двухэтажный','Реактор'], bids:5, accent:'bg-sky-600', statusLabel:'Анализ', statusColor:'amber', private:false },
+  { id:'interrao', logo:'059669', ini:'ИР', org:'ПАО "Интер РАО"', event:'Электро 2027', title:'Энергетика будущего', budget:5300000, area:120, type:'Полуостров', deadline:'2026-12-08', status:A, tags:['Smart Grid'], bids:3, accent:'bg-emerald-600', statusLabel:'Сбор', statusColor:'emerald', private:false },
+];
+
+const store = {
+  tenders: tendersData.map((t) => ({ ...t, logo:`https://placehold.co/48x48/${t.logo}/ffffff?text=${t.ini}`, alt:`Логотип ${t.org}` })),
+  notifications: [
+    { id:'n1', type:'tenders', title:'ООО «ДИВИЛЕКС» загрузил смету', sub:'Тендер: Эксклюзивный стенд 250 м²', date:new Date(Date.now()-2*60*1000), read:false },
+    { id:'n2', type:'tenders', title:'Тендер Газпром скоро закроется', sub:'Осталось 24 часа', date:new Date(Date.now()-2*3600*1000), read:false },
+    { id:'n3', type:'messages', title:'Сообщение от ДИВИЛЕКС', sub:'Готовы приступить к 3D', date:new Date(Date.now()-5*3600*1000), read:true },
+    { id:'n4', type:'system', title:'Отчёт готов', sub:'Раздел Аналитика', date:new Date(Date.now()-26*3600*1000), read:true },
+  ],
+  qa: [
+    { id:'q1', author:'Скрытый участник #1', role:'participant', text:'Возможен ли подвод воды в зону бара?', date:new Date(Date.now()-25*3600*1000) },
+    { id:'q2', author:'Заказчик', role:'customer', text:'Да, точка в 3 метрах. Добавьте разводку.', date:new Date(Date.now()-24*3600*1000) },
+  ],
+  audit: [
+    { id:'a1', date:new Date(Date.now()-2*3600*1000), actor:'Мария П.', type:'tender', text:'Изменила бюджет тендера «Газпром» с 15 000 000 ₽ до 18 500 000 ₽' },
+    { id:'a2', date:new Date(Date.now()-6*3600*1000), actor:'Алексей К.', type:'tender', text:'Опубликовал тендер «Сбербанк ПМЭФ»' },
+    { id:'a3', date:new Date(Date.now()-30*3600*1000), actor:'Система', type:'system', text:'Автоматически привязан шаблон NDA' },
+    { id:'a4', date:new Date(Date.now()-50*3600*1000), actor:'Дмитрий С.', type:'team', text:'Пригласил Ивана П. в команду (роль: Инженер)' },
+    { id:'a5', date:new Date(Date.now()-80*3600*1000), actor:'Мария П.', type:'tender', text:'Скачала 3 сметы по тендеру «Ростелеком»' },
+  ],
+  quotes: [
+    { id:'dv', name:'ООО «ДИВИЛЕКС»', initials:'ДВ', color:'emerald', price:17200000, days:35, warranty:24, best:true, anomaly:false },
+    { id:'as', name:'Альфа Стенд', initials:'AS', color:'rose', price:18900000, days:40, warranty:6, anomaly:false },
+    { id:'gm', name:'ГлавМонтаж', initials:'GM', color:'teal', price:16500000, days:45, warranty:18, anomaly:true, anomalyText:'Позиция «монтаж» на 2.3× выше медианы' },
+  ],
+  savedSearches: [
+    { id:'s1', name:'ПМЭФ · 200+ м²', q:'площадь:>200' },
+    { id:'s2', name:'До 10 млн', q:'бюджет:<10000000' },
+    { id:'s3', name:'Металл-Экспо', q:'металл-экспо' },
+  ],
+  quoteItems: [
+    { id:'qi1', name:'Металлокаркас', unit:'м²', qty:250, price:4200 },
+    { id:'qi2', name:'ЛДФ обшивка', unit:'м²', qty:380, price:2800 },
+    { id:'qi3', name:'Покраска', unit:'м²', qty:380, price:950 },
+    { id:'qi4', name:'LED экран P2.5', unit:'шт', qty:4, price:850000 },
+    { id:'qi5', name:'Монтаж / демонтаж', unit:'чел·дн', qty:40, price:12000 },
+  ],
+  selections: new Set(),
+  selectMode: false,
+  currentTender: null,
+  media: [],
+  exhibitions: [],
+  filters: { status:'', budget_min:'', area_min:'', q:'', privateOnly:false },
+  role: 'customer',
+  theme: 'light',
+  onboarded: { customer:false, contractor:false },
+};
+
+/* =========================================================
+ * Theme
+ * ========================================================= */
+const applyTheme = (t) => {
+  document.documentElement.classList.toggle('dark', t === 'dark');
+  $('.dark-icon-light')?.classList.toggle('hidden', t === 'dark');
+  $('.dark-icon-dark')?.classList.toggle('hidden', t !== 'dark');
+  try { localStorage.setItem('theme', t); } catch {}
+};
+const setupTheme = () => {
+  let s = 'light';
+  try { s = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch {}
+  applyTheme(s);
+};
+const toggleTheme = () => applyTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark');
+
+/* =========================================================
+ * Toast
+ * ========================================================= */
+const TOAST_STYLES = {
+  success: { cls:'border-emerald-500', icon:'ph-check-circle text-emerald-500' },
+  error:   { cls:'border-red-500',     icon:'ph-warning-circle text-red-500'   },
+  info:    { cls:'border-brand-500',   icon:'ph-info text-brand-500'           },
+};
+const showToast = (message, type = 'success', action = null) => {
+  const c = $('#toast-container'); if (!c) return;
+  const st = TOAST_STYLES[type] || TOAST_STYLES.success;
+  const t = document.createElement('div');
+  t.className = `flex items-start p-4 rounded-xl shadow-lg border-l-4 bg-white text-slate-800 ${st.cls} animate-slide-in-right w-80`;
+  const icon = document.createElement('i'); icon.className = `ph ${st.icon} text-2xl mr-3 flex-shrink-0`;
+  icon.setAttribute('aria-hidden','true');
+  const body = document.createElement('div'); body.className = 'flex-1 min-w-0';
+  const p = document.createElement('p'); p.className = 'font-semibold text-sm'; p.textContent = message; body.appendChild(p);
+  if (action?.label && typeof action.onClick === 'function') {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'mt-2 text-xs font-bold text-brand-600 underline'; b.textContent = action.label;
+    b.addEventListener('click', () => { action.onClick(); dismiss(); });
+    body.appendChild(b);
+  }
+  t.append(icon, body); c.appendChild(t);
+  let to = setTimeout(dismiss, 5000);
+  function dismiss() { clearTimeout(to); t.style.transition='opacity .3s, transform .3s'; t.style.opacity='0'; t.style.transform='translateX(100%)'; setTimeout(() => t.remove(), 320); }
+};
+
+/* =========================================================
+ * Confirm
+ * ========================================================= */
+const confirmDialog = (opts) => new Promise((resolve) => {
+  const dlg = $('#confirm-dialog');
+  $('#confirm-title').textContent = opts.title || 'Подтвердите';
+  $('#confirm-text').textContent = opts.text || 'Это действие нельзя отменить.';
+  const ok = $('#confirm-ok'), cancel = $('#confirm-cancel');
+  const onOk = () => { cleanup(); dlg.close(); resolve(true); };
+  const onCancel = () => { cleanup(); dlg.close(); resolve(false); };
+  const cleanup = () => { ok.removeEventListener('click', onOk); cancel.removeEventListener('click', onCancel); };
+  ok.addEventListener('click', onOk); cancel.addEventListener('click', onCancel);
+  dlg.showModal();
+});
+
+/* =========================================================
+ * Dates
+ * ========================================================= */
+const setCurrentDate = () => {
+  const s = new Date().toLocaleDateString('ru-RU', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  const el = $('#current-date'); if (el) el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+};
+const refreshDeadlines = () => {
+  $$('[data-deadline]').forEach((el) => {
+    const d = daysUntil(el.dataset.deadline);
+    el.textContent = d === 0 ? 'Сегодня' : `${d} дн.`;
+    el.classList.toggle('text-red-500', d <= 3);
+    el.classList.toggle('text-slate-800', d > 3);
+  });
+};
+
+/* =========================================================
+ * Search operators
+ * ========================================================= */
+const parseSearch = (q) => {
+  const tokens = { text:[], area:{}, budget:{}, status:'', tag:'' };
+  if (!q) return tokens;
+  const parts = q.match(/([а-яa-z]+):(>|<|=)?([^\s]+)|[^\s]+/gi) || [];
+  parts.forEach((p) => {
+    if (/^площадь:(>|<|=)?\d+$/.test(p)) {
+      const m = p.match(/площадь:(>|<|=)?(\d+)/);
+      tokens.area = { op: m[1] || '=', value: +m[2] };
+    } else if (/^бюджет:\d+\.\.\d+$/.test(p)) {
+      const m = p.match(/бюджет:(\d+)\.\.(\d+)/);
+      tokens.budget = { min: +m[1], max: +m[2] };
+    } else if (/^бюджет:(>|<|=)?\d+$/.test(p)) {
+      const m = p.match(/бюджет:(>|<|=)?(\d+)/);
+      tokens.budget = { op: m[1] || '=', value: +m[2] };
+    } else if (p.startsWith('статус:')) {
+      tokens.status = p.split(':')[1];
+    } else if (p.startsWith('тег:')) {
+      tokens.tag = p.split(':')[1];
+    } else {
+      tokens.text.push(p);
+    }
+  });
+  return tokens;
+};
+
+const matchesParsed = (t, parsed, f) => {
+  if (parsed.status) {
+    const map = { 'активный':A, 'анализ':AN, 'закрыт':C };
+    if (t.status !== (map[parsed.status.toLowerCase()] || parsed.status)) return false;
+  }
+  if (parsed.tag && !t.tags.some((tag) => tag.toLowerCase().includes(parsed.tag.toLowerCase()))) return false;
+  if (parsed.area.op) {
+    const v = parsed.area.value;
+    if (parsed.area.op === '>' && t.area <= v) return false;
+    if (parsed.area.op === '<' && t.area >= v) return false;
+    if (parsed.area.op === '=' && t.area !== v) return false;
+  }
+  if (parsed.budget.min != null) { if (t.budget < parsed.budget.min || t.budget > parsed.budget.max) return false; }
+  else if (parsed.budget.op) {
+    const v = parsed.budget.value;
+    if (parsed.budget.op === '>' && t.budget <= v) return false;
+    if (parsed.budget.op === '<' && t.budget >= v) return false;
+    if (parsed.budget.op === '=' && t.budget !== v) return false;
+  }
+  if (parsed.text.length) {
+    const hay = (t.title + t.org + t.event).toLowerCase();
+    if (!parsed.text.some((w) => hay.includes(w.toLowerCase()))) return false;
+  }
+  if (f.status && t.status !== f.status) return false;
+  if (f.budget_min && t.budget < +f.budget_min) return false;
+  if (f.area_min && t.area < +f.area_min) return false;
+  if (f.privateOnly && !t.private) return false;
+  return true;
+};
+
+const renderSearchTokens = (q) => {
+  const c = $('#search-tokens'); if (!c) return;
+  const parsed = parseSearch(q);
+  const chips = [];
+  if (parsed.area.op) chips.push(`Площадь ${parsed.area.op} ${parsed.area.value}`);
+  if (parsed.budget.min != null) chips.push(`Бюджет ${fmtCompact(parsed.budget.min)}–${fmtCompact(parsed.budget.max)}`);
+  else if (parsed.budget.op) chips.push(`Бюджет ${parsed.budget.op} ${fmtCompact(parsed.budget.value)}`);
+  if (parsed.status) chips.push(`Статус: ${parsed.status}`);
+  if (parsed.tag) chips.push(`Тег: ${parsed.tag}`);
+  c.innerHTML = chips.map((t) => `<span class="text-[10px] font-bold uppercase bg-brand-50 text-brand-700 px-2 py-1 rounded-full">${escapeHtml(t)}</span>`).join('');
+};
+
+/* =========================================================
+ * Render tenders
+ * ========================================================= */
+const statusColors = {
+  emerald:'bg-emerald-50 text-emerald-600 border-emerald-200',
+  amber:'bg-amber-50 text-amber-600 border-amber-200',
+  blue:'bg-blue-50 text-blue-600 border-blue-200',
+};
+const renderTenders = () => {
+  const list = $('#tenders-list'); if (!list) return;
+  const parsed = parseSearch(store.filters.q || '');
+  const filtered = store.tenders.filter((t) => matchesParsed(t, parsed, store.filters));
+
+  const cnt = $('[data-tenders-count]'); if (cnt) cnt.textContent = filtered.length;
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300">
+      <i class="ph ph-magnifying-glass text-5xl text-slate-300" aria-hidden="true"></i>
+      <p class="text-slate-600 font-semibold mt-4">Ничего не найдено</p>
+      <p class="text-slate-400 text-sm mt-1 mb-4">Попробуйте изменить фильтры.</p>
+      <div class="flex gap-2 justify-center"><button data-action="reset-filters" class="px-4 py-2 rounded-xl bg-white border border-gray-200 text-slate-600 font-semibold text-sm">Сбросить</button></div>
+    </div>`;
+    return;
+  }
+
+  const budgetFmt = (b) => b ? fmtCompact(b) : 'Открытый';
+  list.innerHTML = filtered.map((t, i) => {
+    const sc = statusColors[t.statusColor] || statusColors.emerald;
+    const num = String(i + 1).padStart(2, '0');
+    const selected = store.selections.has(t.id);
+    const privateBadge = t.private ? '<span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase bg-purple-50 text-purple-600 px-2 py-0.5 rounded"><i class="ph ph-lock" aria-hidden="true"></i>Закрытый</span>' : '';
+    const cardAction = store.selectMode ? 'toggle-card-select' : 'open-tender';
+    return `
+    <div class="tender-card ${selected ? 'is-selected' : ''} ${store.selectMode ? 'is-select-mode' : ''} bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md relative overflow-hidden group" data-tender-id="${escapeHtml(t.id)}" style="animation-delay:${Math.min(i * 20, 400)}ms">
+      <span class="absolute left-0 top-0 w-1 h-full ${escapeHtml(t.accent)}" aria-hidden="true"></span>
+      ${store.selectMode ? `<span class="absolute top-4 right-4 w-6 h-6 rounded-full border-2 ${selected ? 'bg-brand-500 border-brand-500' : 'border-gray-300 bg-white'} flex items-center justify-center z-10 pointer-events-none"><i class="ph ph-check text-white text-xs ${selected ? '' : 'hidden'}" aria-hidden="true"></i></span>` : ''}
+      <div class="p-5 pl-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <button type="button" data-action="${cardAction}" data-tender-id="${escapeHtml(t.id)}" class="flex-1 text-left flex items-center pl-2 min-w-0">
+          <span class="relative flex-shrink-0">
+            <img src="${escapeHtml(t.logo)}" alt="${escapeHtml(t.alt)}" class="w-12 h-12 rounded-xl border border-gray-100 shadow-sm" loading="lazy">
+            <span class="absolute -top-1 -left-1 bg-slate-800 text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${num}</span>
+          </span>
+          <span class="ml-4 min-w-0">
+            <span class="block text-base font-bold text-slate-800 group-hover:text-brand-600 transition-colors truncate">${escapeHtml(t.title)}</span>
+            <span class="block text-sm text-slate-500 font-medium truncate">${escapeHtml(t.org)} • ${escapeHtml(t.event)}</span>
+            <span class="flex gap-2 mt-2 flex-wrap">
+              ${privateBadge}
+              ${t.tags.map((tag) => `<span class="text-[10px] uppercase font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded">${escapeHtml(tag)}</span>`).join('')}
+            </span>
+          </span>
+        </button>
+        <div class="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 md:w-1/2 md:pl-6 border-t md:border-t-0 border-gray-50 pt-3 md:pt-0">
+          <div class="md:w-1/5"><p class="text-xs text-slate-400">Бюджет</p><p class="text-sm font-bold text-slate-800">${escapeHtml(budgetFmt(t.budget))}</p></div>
+          <div class="md:w-1/5"><p class="text-xs text-slate-400">Площадь</p><p class="text-sm font-bold text-slate-800">${t.area} м²</p></div>
+          <div class="md:w-1/5"><p class="text-xs text-slate-400">Дедлайн</p><p class="text-sm font-bold" data-deadline="${escapeHtml(t.deadline)}">—</p></div>
+          <div class="md:w-1/5">
+            <span class="${sc} border text-[10px] font-bold px-2 py-1 rounded-full inline-flex items-center uppercase tracking-wider mb-1">
+              <span class="w-1.5 h-1.5 bg-current rounded-full mr-1.5 animate-pulse" aria-hidden="true"></span>${escapeHtml(t.statusLabel)}
+            </span>
+            <p class="text-xs text-slate-400 flex items-center"><i class="ph ph-users mr-1" aria-hidden="true"></i>${t.bids}</p>
+          </div>
+          <div class="md:w-1/5 flex justify-end items-center gap-1">
+            <div class="quick-actions flex gap-1">
+              <button type="button" data-action="quick-edit" data-tender-id="${escapeHtml(t.id)}" data-tooltip="Изменить" class="w-7 h-7 rounded-lg hover:bg-gray-100 text-slate-400 hover:text-brand-600 flex items-center justify-center"><i class="ph ph-pencil" aria-hidden="true"></i></button>
+              <button type="button" data-action="duplicate-tender" data-tender-id="${escapeHtml(t.id)}" data-tooltip="Дублировать" class="w-7 h-7 rounded-lg hover:bg-gray-100 text-slate-400 hover:text-brand-600 flex items-center justify-center"><i class="ph ph-copy" aria-hidden="true"></i></button>
+              <button type="button" data-action="share-tender" data-tender-id="${escapeHtml(t.id)}" data-tooltip="Поделиться" class="w-7 h-7 rounded-lg hover:bg-gray-100 text-slate-400 hover:text-brand-600 flex items-center justify-center"><i class="ph ph-share-network" aria-hidden="true"></i></button>
+              <button type="button" data-action="quick-delete" data-tender-id="${escapeHtml(t.id)}" data-tooltip="Удалить" class="w-7 h-7 rounded-lg hover:bg-gray-100 text-slate-400 hover:text-red-500 flex items-center justify-center"><i class="ph ph-trash" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  refreshDeadlines();
+  updateStats();
+};
+
+const updateStats = () => {
+  const active = store.tenders.filter((t) => t.status === A).length;
+  const sum = store.tenders.reduce((a, t) => a + (t.budget || 0), 0);
+  const totalArea = store.tenders.reduce((a, t) => a + t.area, 0);
+  const sqm = totalArea ? sum / totalArea : 0;
+  const a1 = $('[data-count-active]'); if (a1) a1.textContent = active;
+  const s1 = $('[data-sum-budget]'); if (s1) s1.textContent = fmtCompact(sum);
+  const a2 = $('[data-avg-sqm]'); if (a2) a2.textContent = fmtCurrency(Math.round(sqm));
+};
+
+const updateSelectionUI = () => {
+  const n = store.selections.size;
+  const ind = $('[data-select-indicator]');
+  const cnt = $('[data-selected-count]');
+  const lbl = $('[data-select-label]');
+  if (ind) ind.hidden = n === 0;
+  if (cnt) cnt.textContent = n;
+  if (lbl) lbl.textContent = store.selectMode ? 'Отменить выбор' : 'Выбрать';
+};
+
+/* =========================================================
+ * Saved searches
+ * ========================================================= */
+const renderSavedSearches = () => {
+  const w = $('#saved-searches'); if (!w) return;
+  const chips = store.savedSearches.map((s) => `<span class="saved-search-chip">${escapeHtml(s.name)}<button type="button" data-action="apply-saved" data-id="${s.id}" class="ml-1" title="Применить">→</button><button type="button" data-action="remove-saved" data-id="${s.id}" class="text-slate-400 hover:text-red-500 ml-1" aria-label="Удалить"><i class="ph ph-x text-xs" aria-hidden="true"></i></button></span>`).join('');
+  w.innerHTML = `<span class="text-xs font-semibold text-slate-500">Сохранённые:</span>${chips}<button type="button" data-action="save-current-search" class="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1"><i class="ph ph-plus" aria-hidden="true"></i>Сохранить текущий</button>`;
+};
+
+/* =========================================================
+ * Tabs
+ * ========================================================= */
+const scrollContainer = $('[data-scroll-container]');
+const headerTitle = $('#header-title');
+const crumbCurrent = $('#crumb-current');
+const navButtons = $$('.nav-btn');
+const switchTab = (tabId, btnEl) => {
+  if (scrollContainer) scrollContainer.scrollTop = 0;
+  $$('.tab-content').forEach((el) => el.classList.remove('is-active'));
+  const target = document.getElementById(tabId); if (!target) return;
+  target.classList.add('is-active');
+  navButtons.forEach((b) => {
+    b.classList.remove('bg-brand-50','text-brand-600','shadow-sm','font-semibold');
+    b.classList.add('text-slate-500','hover:bg-gray-50','hover:text-slate-800','font-medium');
+    b.setAttribute('aria-current','false');
+  });
+  const ab = btnEl?.classList.contains('nav-btn') ? btnEl : navButtons.find((b) => b.dataset.tab === tabId);
+  if (ab) { ab.classList.remove('text-slate-500','hover:bg-gray-50','hover:text-slate-800','font-medium'); ab.classList.add('bg-brand-50','text-brand-600','shadow-sm','font-semibold'); ab.setAttribute('aria-current','page'); }
+  const title = target.dataset.title || 'Экспо Тендер';
+  if (headerTitle) headerTitle.textContent = title;
+  if (crumbCurrent) crumbCurrent.textContent = title;
+  target.setAttribute('tabindex','-1'); target.focus({ preventScroll:true });
+  if (tabId === 'tab-notifications') renderNotifications();
+  if (tabId === 'tab-audit') renderAuditFull();
+  if (tabId === 'tab-media') renderMedia();
+  if (tabId === 'tab-exhibitions') renderExhibitions();
+  if (tabId === 'tab-analytics') renderTopContractors();
+};
+
+/* =========================================================
+ * Tender details
+ * ========================================================= */
+const openTenderDetails = (id) => {
+  const t = store.tenders.find((x) => x.id === id); if (!t) return;
+  store.currentTender = t;
+  $('#det-logo').src = t.logo; $('#det-logo').alt = t.alt;
+  $('#det-title').textContent = t.title;
+  $('#det-sub').textContent = `${t.org} • ${t.event}`;
+  $('#det-budget').textContent = t.budget ? fmtCurrency(t.budget) : 'Открытый';
+  $('#det-area').textContent = t.area + ' м²';
+  $('#det-type').textContent = t.type;
+  $('#det-deadline').textContent = new Date(t.deadline).toLocaleDateString('ru-RU');
+  $('#det-desc').textContent = `Застройка стенда площадью ${t.area} м² типа «${t.type}» для ${t.org} в рамках ${t.event}. Полный цикл: проектирование, производство, логистика, монтаж. Все материалы — с сертификатами КМ1.`;
+  $('#ai-tz-block').hidden = true;
+  renderSimilar(t);
+  renderAiRecommendations(t);
+  switchTab('tab-tender-details');
+};
+
+const renderSimilar = (t) => {
+  const similar = store.tenders.filter((x) => x.id !== t.id && Math.abs(x.area - t.area) < 80 && x.status === A).slice(0, 3);
+  const w = $('#similar-tenders'); if (!w) return;
+  if (!similar.length) { w.innerHTML = '<p class="text-xs text-slate-400">Похожих не найдено.</p>'; return; }
+  w.innerHTML = similar.map((s) => `
+    <button type="button" data-action="open-tender" data-tender-id="${escapeHtml(s.id)}" class="text-left p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-brand-300 transition-all">
+      <p class="text-sm font-bold text-slate-800 truncate">${escapeHtml(s.title)}</p>
+      <p class="text-xs text-slate-500 truncate mt-0.5">${escapeHtml(s.org)}</p>
+      <p class="text-xs font-bold text-brand-600 mt-2">${s.area} м² · ${s.budget ? fmtCompact(s.budget) : 'Открытый'}</p>
+    </button>`).join('');
+};
+
+const renderAiRecommendations = (t) => {
+  const w = $('#ai-recommendations'); if (!w) return;
+  const recs = [
+    { name:'ООО «ДИВИЛЕКС»', score:97, reason:`6 проектов ${t.area}–${t.area + 50} м²`, color:'emerald', initials:'ДВ' },
+    { name:'ГлавМонтаж', score:88, reason:'4 проекта в премиум-сегменте', color:'teal', initials:'GM' },
+    { name:'ЭкспоПро', score:82, reason:'3 проекта с LED-интеграцией', color:'indigo', initials:'ЭП' },
+  ];
+  w.innerHTML = recs.map((r) => `
+    <button type="button" data-action="open-contractor" class="w-full text-left flex items-center gap-3 p-3 bg-white rounded-xl border border-purple-100 hover:border-purple-300 transition-all">
+      <span class="w-9 h-9 rounded-full bg-${r.color}-100 text-${r.color}-700 flex items-center justify-center font-bold text-xs flex-shrink-0">${r.initials}</span>
+      <span class="flex-1 min-w-0">
+        <span class="block text-sm font-bold text-slate-800 truncate">${escapeHtml(r.name)}</span>
+        <span class="block text-[11px] text-slate-500 truncate">${escapeHtml(r.reason)}</span>
+      </span>
+      <span class="text-xs font-bold text-purple-600">${r.score}%</span>
+    </button>`).join('');
+};
+
+/* =========================================================
+ * Inner tabs
+ * ========================================================= */
+const switchInnerTab = (panel) => {
+  const panels = { desc:'#inner-content-desc', qa:'#inner-content-qa', compare:'#inner-content-compare', audit:'#inner-content-audit' };
+  const tabs = { desc:'#inner-tab-desc', qa:'#inner-tab-qa', compare:'#inner-tab-compare', audit:'#inner-tab-audit' };
+  Object.entries(tabs).forEach(([k, sel]) => { const el = $(sel); if (!el) return; const act = k === panel; el.setAttribute('aria-selected', String(act)); el.tabIndex = act ? 0 : -1; });
+  Object.entries(panels).forEach(([k, sel]) => { const el = $(sel); if (!el) return; el.hidden = k !== panel; });
+  if (panel === 'qa') renderQA();
+  if (panel === 'audit') renderAudit();
+  if (panel === 'compare') renderCompare();
+};
+
+const renderQA = () => {
+  const t = $('#qa-thread'); if (!t) return;
+  t.innerHTML = store.qa.map((m) => {
+    const c = m.role === 'customer';
+    return `<div class="${c ? 'bg-brand-50 border-brand-100 ml-auto' : 'bg-white border-gray-100'} p-4 rounded-2xl border shadow-sm w-5/6">
+      <div class="flex justify-between items-center mb-2"><span class="text-xs font-bold ${c ? 'text-brand-600' : 'text-slate-400'}">${c ? '<i class="ph-fill ph-crown mr-1" aria-hidden="true"></i>' : ''}${escapeHtml(m.author)}</span><span class="text-[10px] text-slate-400">${escapeHtml(fmtRel(m.date))}</span></div>
+      <p class="text-sm ${c ? 'text-brand-800' : 'text-slate-700'}">${escapeHtml(m.text)}</p>
+    </div>`;
+  }).join('');
+  t.scrollTop = t.scrollHeight;
+  const c = $('[data-qa-count]'); if (c) c.textContent = store.qa.length;
+};
+
+const renderAudit = () => {
+  const l = $('#audit-list'); if (!l) return;
+  l.innerHTML = store.audit.slice(0, 3).map((a) => `<li class="pl-6 relative"><span class="absolute -left-2 top-1 w-4 h-4 rounded-full bg-brand-500 border-2 border-white shadow"></span><p class="text-xs text-slate-400 mb-0.5">${escapeHtml(fmtRel(a.date))} · ${escapeHtml(a.actor)}</p><p class="text-sm text-slate-700">${escapeHtml(a.text)}</p></li>`).join('');
+};
+
+const renderCompare = () => {
+  const c = $('#compare-content'); if (!c) return;
+  const qs = store.quotes;
+  const minP = Math.min(...qs.map((q) => q.price));
+  const minD = Math.min(...qs.map((q) => q.days));
+  const maxW = Math.max(...qs.map((q) => q.warranty));
+  c.innerHTML = `
+    <div class="mb-4 p-3 bg-purple-50 border border-purple-200 rounded-xl flex items-start gap-2">
+      <i class="ph ph-magic-wand text-purple-500 mt-0.5" aria-hidden="true"></i>
+      <div><p class="text-xs font-bold text-purple-700">AI-анализ смет</p><p class="text-xs text-slate-600 mt-1">Обнаружена 1 аномалия: у <b>ГлавМонтаж</b> позиция «монтаж» на <b>2.3× выше медианы</b> по 40 похожим проектам.</p></div>
+    </div>
+    <table class="w-full text-sm border-separate border-spacing-y-2">
+      <thead><tr class="text-left text-xs uppercase text-slate-400">
+        <th class="px-3 py-2">Компания</th><th class="px-3 py-2">Цена</th><th class="px-3 py-2">Срок</th><th class="px-3 py-2">Гарантия</th><th class="px-3 py-2">Риск</th><th class="px-3 py-2"></th>
+      </tr></thead>
+      <tbody>${qs.map((q) => `<tr class="bg-white border border-gray-100 rounded-xl ${q.anomaly ? 'border-amber-200' : ''}">
+        <td class="px-3 py-3"><div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-full bg-${q.color}-100 text-${q.color}-700 flex items-center justify-center font-bold text-xs">${q.initials}</span>
+          <span class="font-semibold text-slate-800">${escapeHtml(q.name)}</span>
+          ${q.best ? '<span class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full font-bold">Лучшее</span>' : ''}
+        </div></td>
+        <td class="px-3 py-3 ${q.price === minP ? 'best-cell' : ''}">${fmtCurrency(q.price)}</td>
+        <td class="px-3 py-3 ${q.days === minD ? 'best-cell' : ''}">${q.days} дн.</td>
+        <td class="px-3 py-3 ${q.warranty === maxW ? 'best-cell' : ''}">${q.warranty} мес.</td>
+        <td class="px-3 py-3 ${q.anomaly ? 'warn-cell' : ''} text-xs">${q.anomaly ? '<i class="ph ph-warning" aria-hidden="true"></i> ' + escapeHtml(q.anomalyText) : '—'}</td>
+        <td class="px-3 py-3 text-right"><button type="button" data-action="select-quote" data-quote="${q.id}" class="px-3 py-1.5 rounded-lg bg-brand-600 text-white text-xs font-semibold">Выбрать</button></td>
+      </tr>`).join('')}</tbody>
+    </table>`;
+};
+
+/* =========================================================
+ * Participants / subcontract / media / exhibitions
+ * ========================================================= */
+const renderParticipants = () => {
+  const ul = $('#participants-list'); if (!ul) return;
+  const ps = [
+    { initials:'ДВ', color:'emerald', name:'ООО «ДИВИЛЕКС»', status:'Смета загружена', rating:4.9, icon:'check-circle', verified:true },
+    { initials:'AS', color:'rose',    name:'Альфа Стенд',    status:'Готовит КП',      rating:4.2, icon:'clock' },
+    { initials:'GM', color:'teal',    name:'ГлавМонтаж',     status:'Смета загружена', rating:4.8, icon:'check-circle' },
+  ];
+  ul.innerHTML = ps.map((p) => `<li><button type="button" data-action="open-contractor" class="w-full text-left flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-brand-300 transition-all group">
+    <span class="flex items-center">
+      <span class="w-10 h-10 rounded-full bg-${p.color}-100 text-${p.color}-600 flex items-center justify-center font-bold text-sm" aria-hidden="true">${p.initials}</span>
+      <span class="ml-3">
+        <span class="block text-sm font-bold text-slate-800 flex items-center">${escapeHtml(p.name)}${p.verified ? '<i class="ph ph-seal-check text-emerald-500 ml-1" data-tooltip="Проверен"></i>' : ''}</span>
+        <span class="text-xs text-${p.color === 'emerald' ? 'emerald-600' : 'slate-500'} font-medium flex items-center"><i class="ph ph-${p.icon} mr-1" aria-hidden="true"></i> ${escapeHtml(p.status)}</span>
+      </span>
+    </span>
+    <span class="text-xs font-bold text-amber-500 flex items-center">${p.rating.toFixed(1)}<i class="ph-fill ph-star ml-1" aria-hidden="true"></i></span>
+  </button></li>`).join('');
+};
+
+const renderSubcontract = () => {
+  const list = $('#subcontract-list'); if (!list) return;
+  const items = [
+    { color:'purple', tag:'Мультимедиа', time:'2 ч', title:'Бесшовные LED панели 3х3м', desc:'Ищем в субаренду светодиодный экран P2.5. Монтаж в Крокусе.', org:'BestExpo', ini:'BE', logoColor:'1e293b' },
+    { color:'amber', tag:'Персонал', time:'Вчера', title:'Бригада монтажников (3 чел)', desc:'Сборка каркаса из ЛДФ и оклейка пленкой. Ночная смена.', org:'СтройСтенд', ini:'SS', logoColor:'ea580c' },
+    { color:'emerald', tag:'Флористика', time:'Вчера', title:'Озеленение зоны ресепшн', desc:'5 кашпо с живыми растениями. Доставка в Экспоцентр.', org:'GreenDesign', ini:'GD', logoColor:'16a34a' },
+  ];
+  list.innerHTML = items.map((it) => `<article class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all relative overflow-hidden group">
+    <div class="absolute top-0 left-0 w-1 h-full bg-${it.color}-500" aria-hidden="true"></div>
+    <div class="flex justify-between items-start mb-4"><span class="bg-${it.color}-50 text-${it.color}-600 text-xs font-bold px-2.5 py-1 rounded-md">${escapeHtml(it.tag)}</span><span class="text-slate-400 text-xs">${escapeHtml(it.time)}</span></div>
+    <h3 class="text-lg font-bold text-slate-800 mb-2">${escapeHtml(it.title)}</h3>
+    <p class="text-sm text-slate-500 mb-6">${escapeHtml(it.desc)}</p>
+    <div class="flex items-center justify-between pt-4 border-t border-gray-50">
+      <div class="flex items-center"><img src="https://placehold.co/32x32/${it.logoColor}/ffffff?text=${it.ini}" alt="" class="w-8 h-8 rounded-full mr-2" loading="lazy"><span class="text-xs font-semibold text-slate-700">${escapeHtml(it.org)}</span></div>
+      <button type="button" data-action="respond-subcontract" class="text-brand-600 text-sm font-semibold">Откликнуться</button>
+    </div>
+  </article>`).join('');
+};
+
+const initMediaData = () => {
+  store.media = [
+    { id:'m1', title:'Сбербанк · ПМЭФ', area:280, budget:22000000, org:'Сбербанк', ini:'SB', img:'1e293b', badge:'Лучший дизайн' },
+    { id:'m2', title:'VK · Игромир', area:140, budget:8500000, org:'VK', ini:'VK', img:'3b82f6' },
+    { id:'m3', title:'Яндекс · РИФ', area:120, budget:6200000, org:'Яндекс', ini:'YA', img:'ef4444' },
+    { id:'m4', title:'Газпром · ПМЭФ', area:250, budget:18500000, org:'Газпром', ini:'GZ', img:'1e3a8a', badge:'Премиум' },
+    { id:'m5', title:'СИБУР · Химия', area:170, budget:7900000, org:'СИБУР', ini:'СБ', img:'0ea5e9' },
+    { id:'m6', title:'РЖД · Транспорт', area:240, budget:14000000, org:'РЖД', ini:'РЖ', img:'b91c1c' },
+    { id:'m7', title:'МТС · Связь-Экспокомм', area:150, budget:7200000, org:'МТС', ini:'МТ', img:'e11d48' },
+    { id:'m8', title:'Росатом · Атомэкспо', area:220, budget:12000000, org:'Росатом', ini:'РА', img:'0ea5e9', badge:'Инновация' },
+    { id:'m9', title:'Т-Банк · Finopolis', area:160, budget:8300000, org:'ТБанк', ini:'ТБ', img:'facc15' },
+    { id:'m10', title:'ЛУКОЙЛ · Нефтегаз', area:280, budget:15300000, org:'ЛУКОЙЛ', ini:'ЛУ', img:'b91c1c' },
+    { id:'m11', title:'Северсталь · Металл-Экспо', area:180, budget:9500000, org:'Северсталь', ini:'СВ', img:'1e293b' },
+    { id:'m12', title:'Ozon · Ecom Expo', area:110, budget:4900000, org:'Ozon', ini:'OZ', img:'1d4ed8' },
+  ];
+};
+
+const renderMedia = () => {
+  const grid = $('#media-grid'); if (!grid) return;
+  const areaVal = $('#media-area')?.value || '';
+  const budgetVal = $('#media-budget')?.value || '';
+  const q = ($('#media-q')?.value || '').toLowerCase().trim();
+
+  const filtered = store.media.filter((m) => {
+    if (q && !(m.title + m.org).toLowerCase().includes(q)) return false;
+    if (areaVal) { const [min, max] = areaVal.split('-').map(Number); if (m.area < min || m.area > max) return false; }
+    if (budgetVal) { const [min, max] = budgetVal.split('-').map(Number); if (m.budget < min || m.budget > max) return false; }
+    return true;
+  });
+
+  if (!filtered.length) { grid.innerHTML = '<p class="col-span-full text-center py-10 text-slate-400">Ничего не найдено</p>'; return; }
+
+  grid.innerHTML = filtered.map((m) => `
+    <article class="media-card bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div class="relative aspect-[4/3]">
+        <img src="https://placehold.co/600x450/${m.img}/ffffff?text=${encodeURIComponent(m.ini)}" alt="" class="w-full h-full object-cover" loading="lazy">
+        ${m.badge ? `<span class="absolute top-3 left-3 bg-amber-400 text-slate-900 text-[10px] font-bold uppercase px-2 py-1 rounded-full">${escapeHtml(m.badge)}</span>` : ''}
+      </div>
+      <div class="p-4">
+        <h3 class="font-bold text-slate-800 text-sm truncate">${escapeHtml(m.title)}</h3>
+        <div class="flex justify-between items-center mt-2 text-xs">
+          <span class="text-slate-500">${m.area} м²</span>
+          <span class="font-bold text-slate-700">${fmtCompact(m.budget)}</span>
+        </div>
+        <div class="mt-3 pt-3 border-t border-gray-50 flex justify-between items-center">
+          <span class="text-[11px] text-slate-400">Автор: ДИВИЛЕКС</span>
+          <button type="button" data-action="open-contractor" class="text-[11px] font-semibold text-brand-600">Похожий проект →</button>
+        </div>
+      </div>
+    </article>`).join('');
+};
+
+const initExhibitionsData = () => {
+  store.exhibitions = [
+    { id:'e1', name:'ПМЭФ 2027', venue:'Экспофорум (СПб)', start:'2027-06-05', mount:'2027-05-28', tenders:['gazprom','sber','vtb'], matchQ:'газпром' },
+    { id:'e2', name:'Нефтегаз 2027', venue:'Экспоцентр (Мск)', start:'2027-04-15', mount:'2027-04-08', tenders:['lukoil','rosneft'], matchQ:'нефтегаз' },
+    { id:'e3', name:'Металл-Экспо 2027', venue:'ВДНХ (Мск)', start:'2027-11-10', mount:'2027-11-03', tenders:['severstal','nornickel','rusal','evraz','nlmk'], matchQ:'металл-экспо' },
+    { id:'e4', name:'Связь-Экспокомм 2027', venue:'Экспоцентр (Мск)', start:'2027-05-12', mount:'2027-05-05', tenders:['mts','megafon','rostelecom'], matchQ:'связь-экспокомм' },
+    { id:'e5', name:'Атомэкспо 2027', venue:'Сочи', start:'2027-09-20', mount:'2027-09-12', tenders:['rosatom'], matchQ:'атомэкспо' },
+    { id:'e6', name:'Finopolis 2027', venue:'Сириус', start:'2027-10-08', mount:'2027-10-01', tenders:['tinkoff','alfa'], matchQ:'finopolis' },
+    { id:'e7', name:'Ecom Expo 2027', venue:'Крокус (Мск)', start:'2027-03-22', mount:'2027-03-15', tenders:['ozon','wb'], matchQ:'ecom' },
+    { id:'e8', name:'Retail Week 2027', venue:'Экспоцентр (Мск)', start:'2027-06-15', mount:'2027-06-08', tenders:['x5','magnit','lenta'], matchQ:'retail' },
+  ];
+};
+
+const renderExhibitions = () => {
+  const list = $('#exhibitions-list'); if (!list) return;
+  const today = new Date();
+  list.innerHTML = store.exhibitions.map((e) => {
+    const start = new Date(e.start);
+    const mount = new Date(e.mount);
+    const daysToMount = Math.ceil((mount - today) / 86400000);
+    const urgent = daysToMount >= 0 && daysToMount <= 60;
+    return `
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden ${urgent ? 'border-l-4 border-l-red-500' : ''}">
+        <div class="p-6 flex flex-col md:flex-row justify-between gap-4">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2 flex-wrap">
+              <h3 class="text-lg font-bold text-slate-800">${escapeHtml(e.name)}</h3>
+              ${urgent ? `<span class="bg-red-50 text-red-600 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full">Монтаж через ${daysToMount} дн.</span>` : ''}
+            </div>
+            <p class="text-sm text-slate-500">${escapeHtml(e.venue)} · ${start.toLocaleDateString('ru-RU', { day:'numeric', month:'long', year:'numeric' })}</p>
+            <p class="text-xs text-slate-400 mt-1">Монтаж с ${mount.toLocaleDateString('ru-RU')}</p>
+          </div>
+          <div class="flex items-center gap-6">
+            <div class="text-center"><p class="text-2xl font-bold text-slate-800">${e.tenders.length}</p><p class="text-xs text-slate-400">тендеров</p></div>
+            <button type="button" data-action="filter-exhibition" data-ex-id="${e.id}" class="px-4 py-2 rounded-xl bg-brand-50 text-brand-700 font-semibold text-sm">Показать</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+};
+
+const renderTopContractors = () => {
+  const w = $('#top-contractors'); if (!w) return;
+  const top = [
+    { name:'ООО «ДИВИЛЕКС»', deals:128, avgSqm:68400, bar:96, color:'emerald', initials:'ДВ' },
+    { name:'ГлавМонтаж', deals:94, avgSqm:72100, bar:80, color:'teal', initials:'GM' },
+    { name:'ЭкспоПро', deals:76, avgSqm:69800, bar:65, color:'indigo', initials:'ЭП' },
+    { name:'Альфа Стенд', deals:52, avgSqm:76500, bar:45, color:'rose', initials:'AS' },
+    { name:'СтендМастер', deals:41, avgSqm:64200, bar:35, color:'amber', initials:'СМ' },
+  ];
+  w.innerHTML = top.map((t) => `
+    <div class="flex items-center gap-3 mb-3">
+      <span class="w-8 h-8 rounded-full bg-${t.color}-100 text-${t.color}-700 flex items-center justify-center font-bold text-[10px] flex-shrink-0">${t.initials}</span>
+      <div class="flex-1 min-w-0">
+        <p class="text-xs font-semibold text-slate-800 truncate">${escapeHtml(t.name)}</p>
+        <div class="progress mt-1"><div class="progress__bar" style="--progress: ${t.bar}%; background:var(--brand-500)"></div></div>
+      </div>
+      <span class="text-xs font-bold text-slate-600 whitespace-nowrap">${t.deals} сд.</span>
+    </div>`).join('');
+};
+
+/* =========================================================
+ * Audit full
+ * ========================================================= */
+const renderAuditFull = () => {
+  const list = $('#audit-full-list'); if (!list) return;
+  const userSel = $('#audit-user');
+  const userFilter = userSel?.value || '';
+  const typeFilter = $('#audit-type')?.value || '';
+
+  // Заполняем только один раз
+  if (userSel && userSel.options.length <= 1) {
+    const users = [...new Set(store.audit.map((a) => a.actor))];
+    userSel.innerHTML = '<option value="">Все пользователи</option>' + users.map((u) => `<option>${escapeHtml(u)}</option>`).join('');
+    userSel.value = userFilter;
+  }
+
+  const filtered = store.audit.filter((a) => (!userFilter || a.actor === userFilter) && (!typeFilter || a.type === typeFilter));
+  const icons = { tender:'ph-gavel', team:'ph-users', system:'ph-gear' };
+  const colors = { tender:'text-brand-500 bg-brand-50', team:'text-purple-500 bg-purple-50', system:'text-slate-500 bg-slate-100' };
+
+  if (!filtered.length) { list.innerHTML = '<div class="p-12 text-center text-slate-400">Нет событий</div>'; return; }
+  list.innerHTML = filtered.map((a) => `
+    <div class="p-4 flex items-start gap-4">
+      <span class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${colors[a.type] || colors.system}">
+        <i class="ph ${icons[a.type] || icons.system}" aria-hidden="true"></i>
+      </span>
+      <div class="flex-1 min-w-0">
+        <div class="flex justify-between items-start gap-3">
+          <p class="text-sm text-slate-800">${escapeHtml(a.text)}</p>
+          <span class="text-xs text-slate-400 whitespace-nowrap">${escapeHtml(fmtRel(a.date))}</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">${escapeHtml(a.actor)}</p>
+      </div>
+    </div>`).join('');
+};
+
+/* =========================================================
+ * Notifications
+ * ========================================================= */
+const NOTIF_ICONS = {
+  tenders:{ icon:'ph-gavel', color:'text-brand-500 bg-brand-50' },
+  messages:{ icon:'ph-chat-circle', color:'text-purple-500 bg-purple-50' },
+  system:{ icon:'ph-info', color:'text-slate-500 bg-slate-100' },
+};
+const renderNotifDropdown = () => {
+  const list = $('#notif-dropdown-list'); if (!list) return;
+  list.innerHTML = store.notifications.slice(0, 3).map((n) => {
+    const m = NOTIF_ICONS[n.type] || NOTIF_ICONS.system;
+    return `<button type="button" class="w-full text-left p-4 border-b border-gray-50 hover:bg-gray-50 ${n.read ? '' : 'bg-brand-50/30'}">
+      <div class="flex items-start gap-3">
+        <span class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${m.color}"><i class="ph ${m.icon}" aria-hidden="true"></i></span>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-slate-800 truncate">${escapeHtml(n.title)}</p>
+          <p class="text-xs text-slate-500 mt-1 truncate">${escapeHtml(n.sub)}</p>
+          <p class="text-[10px] text-slate-400 mt-1">${escapeHtml(fmtRel(n.date))}</p>
+        </div>
+      </div>
+    </button>`;
+  }).join('');
+  const unread = store.notifications.filter((n) => !n.read).length;
+  const b = $('#notif-badge'); if (b) b.hidden = unread === 0;
+};
+
+let currentNotifFilter = 'all';
+const renderNotifications = () => {
+  const list = $('#notifs-full-list'); if (!list) return;
+  const filtered = store.notifications.filter((n) => {
+    if (currentNotifFilter === 'unread') return !n.read;
+    if (currentNotifFilter === 'tenders') return n.type === 'tenders';
+    if (currentNotifFilter === 'messages') return n.type === 'messages';
+    return true;
+  });
+  if (!filtered.length) { list.innerHTML = '<div class="p-12 text-center"><i class="ph ph-bell-slash text-4xl text-slate-300" aria-hidden="true"></i><p class="text-slate-500 mt-3 text-sm">Пусто</p></div>'; return; }
+  list.innerHTML = filtered.map((n) => {
+    const m = NOTIF_ICONS[n.type] || NOTIF_ICONS.system;
+    return `<button type="button" data-action="mark-one-read" data-notif="${n.id}" class="w-full text-left p-5 hover:bg-gray-50 ${n.read ? '' : 'bg-brand-50/30'}">
+      <div class="flex items-start gap-4">
+        <span class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${m.color}"><i class="ph ${m.icon}" aria-hidden="true"></i></span>
+        <div class="flex-1 min-w-0">
+          <div class="flex justify-between items-start gap-3"><p class="font-semibold text-slate-800 text-sm">${escapeHtml(n.title)}</p><span class="text-xs text-slate-400 whitespace-nowrap">${escapeHtml(fmtRel(n.date))}</span></div>
+          <p class="text-xs text-slate-500 mt-1">${escapeHtml(n.sub)}</p>
+        </div>
+        ${n.read ? '' : '<span class="w-2 h-2 rounded-full bg-brand-500 flex-shrink-0 mt-2" aria-label="Непрочитано"></span>'}
+      </div>
+    </button>`;
+  }).join('');
+};
+const markAllRead = () => {
+  store.notifications.forEach((n) => n.read = true);
+  renderNotifDropdown();
+  if ($('#tab-notifications').classList.contains('is-active')) renderNotifications();
+  showToast('Все прочитаны', 'success');
+};
+
+/* =========================================================
+ * Command palette
+ * ========================================================= */
+const PALETTE_COMMANDS = [
+  { id:'dash', title:'Витрина тендеров', icon:'ph-squares-four', action:() => switchTab('tab-dashboard') },
+  { id:'create', title:'Создать тендер', icon:'ph-plus-circle', action:() => switchTab('tab-create') },
+  { id:'check', title:'Проверка контрагента', icon:'ph-shield-check', action:() => switchTab('tab-check') },
+  { id:'sub', title:'Биржа субподряда', icon:'ph-handshake', action:() => switchTab('tab-subcontract') },
+  { id:'media', title:'Медиатека решений', icon:'ph-images', action:() => switchTab('tab-media') },
+  { id:'exh', title:'Календарь выставок', icon:'ph-calendar-dots', action:() => switchTab('tab-exhibitions') },
+  { id:'ana', title:'Аналитика рынка', icon:'ph-chart-line-up', action:() => switchTab('tab-analytics') },
+  { id:'crm', title:'Мои проекты (CRM)', icon:'ph-kanban', action:() => switchTab('tab-projects') },
+  { id:'audit', title:'Журнал действий', icon:'ph-clock-counter-clockwise', action:() => switchTab('tab-audit') },
+  { id:'notif', title:'Уведомления', icon:'ph-bell', action:() => switchTab('tab-notifications') },
+  { id:'prof', title:'Профиль и команда', icon:'ph-user-circle', action:() => switchTab('tab-profile') },
+  { id:'theme', title:'Переключить тему', icon:'ph-sun', action:() => toggleTheme() },
+  { id:'export', title:'Экспорт CSV', icon:'ph-download-simple', action:() => exportCSV() },
+  { id:'new', title:'Смета-конструктор', icon:'ph-list-numbers', action:() => openConstructor() },
+];
+let cmdSelected = 0, cmdItems = PALETTE_COMMANDS;
+const openPalette = () => { const b = $('#cmd-backdrop'); b.classList.add('is-open'); $('#cmd-input').value = ''; cmdSelected = 0; renderPalette(); setTimeout(() => $('#cmd-input').focus(), 30); };
+const closePalette = () => $('#cmd-backdrop').classList.remove('is-open');
+const renderPalette = () => {
+  const q = $('#cmd-input').value.toLowerCase().trim();
+  const tenders = store.tenders.map((t) => ({ id:'t-'+t.id, title:t.title, hint:'Тендер · '+t.org, icon:'ph-gavel', action:() => openTenderDetails(t.id) }));
+  const all = [...PALETTE_COMMANDS, ...tenders];
+  cmdItems = q ? all.filter((c) => (c.title + (c.hint || '')).toLowerCase().includes(q)) : all;
+  if (cmdSelected >= cmdItems.length) cmdSelected = 0;
+  $('#cmd-list').innerHTML = cmdItems.map((c, i) => `<li role="option" aria-selected="${i === cmdSelected}" data-i="${i}" class="cmd-item flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer hover:bg-brand-50">
+    <i class="ph ${c.icon} text-xl text-slate-400" aria-hidden="true"></i>
+    <span class="flex-1 min-w-0"><span class="block text-sm font-semibold text-slate-800 truncate">${escapeHtml(c.title)}</span>${c.hint ? `<span class="block text-[11px] text-slate-400 truncate">${escapeHtml(c.hint)}</span>` : ''}</span>
+  </li>`).join('') || '<li class="px-4 py-6 text-center text-sm text-slate-400">Ничего не найдено</li>';
+  $$('#cmd-list .cmd-item').forEach((el) => {
+    el.addEventListener('click', () => { cmdItems[+el.dataset.i]?.action(); closePalette(); });
+    el.addEventListener('mouseenter', () => { cmdSelected = +el.dataset.i; $$('#cmd-list .cmd-item').forEach((x, j) => x.setAttribute('aria-selected', String(j === cmdSelected))); });
+  });
+};
+
+/* =========================================================
+ * Panels
+ * ========================================================= */
+const panel = $('#contractor-panel'), panelBackdrop = $('#modal-backdrop');
+let lastFocused = null;
+const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+const openContractorProfile = () => { lastFocused = document.activeElement; panelBackdrop.classList.add('is-open'); panel.classList.add('is-open'); panel.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; panel.querySelector(FOCUSABLE)?.focus(); };
+const closeContractorProfile = () => { panelBackdrop.classList.remove('is-open'); panel.classList.remove('is-open'); panel.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; lastFocused?.focus?.(); };
+
+const ctorPanel = $('#constructor-panel'), ctorBackdrop = $('#constructor-backdrop');
+const openConstructor = () => { ctorBackdrop.classList.add('is-open'); ctorPanel.classList.add('is-open'); ctorPanel.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; renderQuoteItems(); };
+const closeConstructor = () => { ctorBackdrop.classList.remove('is-open'); ctorPanel.classList.remove('is-open'); ctorPanel.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; };
+
+const renderQuoteItems = () => {
+  const w = $('#constructor-items'); if (!w) return;
+  w.innerHTML = store.quoteItems.map((it) => {
+    const sum = it.qty * it.price;
+    return `<div class="position-row bg-gray-50 rounded-xl p-3" data-item-id="${it.id}">
+      <input type="text" value="${escapeHtml(it.name)}" data-field="name" aria-label="Позиция" class="bg-transparent border-0 outline-none text-sm font-semibold text-slate-800 w-full min-w-0">
+      <input type="text" value="${escapeHtml(it.unit)}" data-field="unit" aria-label="Единица" class="bg-transparent border-0 outline-none text-xs text-slate-500 text-center w-full">
+      <input type="number" value="${it.qty}" data-field="qty" aria-label="Количество" class="input-light rounded-lg px-2 py-1 text-sm w-full text-right">
+      <input type="number" value="${it.price}" data-field="price" aria-label="Цена" class="input-light rounded-lg px-2 py-1 text-sm w-full text-right">
+      <span class="text-right text-sm font-bold text-slate-600 pr-1">${fmtCurrency(sum)}</span>
+      <button type="button" data-action="remove-quote-item" data-id="${it.id}" class="w-8 h-8 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 flex items-center justify-center" aria-label="Удалить"><i class="ph ph-trash" aria-hidden="true"></i></button>
+    </div>`;
+  }).join('');
+  const total = store.quoteItems.reduce((a, i) => a + i.qty * i.price, 0);
+  $('#quote-total').textContent = fmtCurrency(total);
+  $('#quote-vat').textContent = fmtCurrency(Math.round(total * 0.2));
+};
+
+/* =========================================================
+ * Filters
+ * ========================================================= */
+const openFilters = () => {
+  $('#filters-backdrop').classList.add('is-open'); $('#filters-panel').classList.add('is-open');
+  $('#filters-panel').setAttribute('aria-hidden','false');
+  $('#f-status-filter').value = store.filters.status || '';
+  $('#f-budget-min').value = store.filters.budget_min || '';
+  $('#f-area-min').value = store.filters.area_min || '';
+  $('#f-q-filter').value = store.filters.q || '';
+  $('#f-private-only').checked = !!store.filters.privateOnly;
+};
+const closeFilters = () => { $('#filters-backdrop').classList.remove('is-open'); $('#filters-panel').classList.remove('is-open'); $('#filters-panel').setAttribute('aria-hidden','true'); };
+const applyFilters = () => {
+  store.filters = {
+    status: $('#f-status-filter').value, budget_min: $('#f-budget-min').value,
+    area_min: $('#f-area-min').value, q: $('#f-q-filter').value, privateOnly: $('#f-private-only').checked,
+  };
+  const count = Object.values(store.filters).filter(Boolean).length;
+  const b = $('[data-filter-count]'); if (b) { b.textContent = count; b.hidden = count === 0; }
+  renderTenders(); closeFilters(); showToast('Фильтры применены', 'info');
+};
+const resetFilters = () => {
+  store.filters = { status:'', budget_min:'', area_min:'', q:'', privateOnly:false };
+  const b = $('[data-filter-count]'); if (b) { b.textContent = '0'; b.hidden = true; }
+  const gs = $('#global-search'); if (gs) gs.value = '';
+  renderSearchTokens('');
+  renderTenders(); closeFilters();
+};
+
+/* =========================================================
+ * Export
+ * ========================================================= */
+const exportCSV = () => {
+  const rows = [['Название','Организация','Мероприятие','Бюджет','Площадь','Тип','Дедлайн','Статус','Заявок']];
+  store.tenders.forEach((t) => rows.push([t.title, t.org, t.event, t.budget || 'Открытый', t.area, t.type, t.deadline, t.statusLabel, t.bids]));
+  const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type:'text/csv;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `expo-tenders-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(a.href);
+  showToast('CSV выгружен', 'success', { label:'Ещё раз', onClick: exportCSV });
+};
+
+const exportAuditCSV = () => {
+  const rows = [['Дата','Пользователь','Тип','Событие']];
+  store.audit.forEach((a) => rows.push([a.date.toISOString(), a.actor, a.type, a.text]));
+  const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type:'text/csv;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `audit-log-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(a.href);
+  showToast('Журнал выгружен', 'success');
+};
+
+/* =========================================================
+ * Check contractor
+ * ========================================================= */
+let checkAbort = null;
+const runCheckContractor = (form) => {
+  const input = form.querySelector('#inn-input');
+  const err = $('#inn-error'), submit = form.querySelector('[data-role="check-submit"]');
+  const res = $('#check-result'), loader = $('#check-loader');
+  err.hidden = true;
+  const inn = input.value.trim();
+  if (!isValidINN(inn)) { err.textContent = 'Некорректный ИНН. Введите 10 или 12 цифр с верной контрольной суммой.'; err.hidden = false; input.focus(); return; }
+  if (checkAbort) checkAbort.abort();
+  checkAbort = new AbortController();
+  res.hidden = true; loader.hidden = false; submit.disabled = true;
+  const t = setTimeout(() => {
+    loader.hidden = true; submit.disabled = false;
+    res.hidden = false;
+    res.querySelector('[data-inn-echo]').textContent = inn;
+    showToast('Данные получены · Компания в зелёной зоне', 'success');
+    checkAbort = null;
+  }, 1400);
+  checkAbort.signal.addEventListener('abort', () => { clearTimeout(t); loader.hidden = true; submit.disabled = false; });
+};
+
+/* =========================================================
+ * Contract / Sign
+ * ========================================================= */
+let contractGenerating = false;
+const generateContract = async (btn) => {
+  if (contractGenerating) return;
+  contractGenerating = true; if (btn) btn.disabled = true;
+  showToast('Формирование договора...', 'info');
+  await new Promise((r) => setTimeout(r, 1500));
+  showToast('Договор и NDA готовы', 'success', { label:'Открыть', onClick: () => showToast('Открытие...', 'info') });
+  closeContractorProfile();
+  contractGenerating = false; if (btn) btn.disabled = false;
+  setTimeout(() => switchTab('tab-projects'), 600);
+};
+
+const signEDS = () => {
+  showToast('Открытие Контур.Подпись...', 'info');
+  setTimeout(() => showToast('Документ подписан ЭЦП. Печать заверена.', 'success'), 2000);
+};
+
+/* =========================================================
+ * Kanban
+ * ========================================================= */
+const setupKanban = () => {
+  const board = $('[data-kanban]'); if (!board) return;
+  let dragged = null;
+  const updateCounts = () => $$('.kanban-dropzone', board).forEach((z) => { const c = z.closest('.kanban-col')?.querySelector('[data-count]'); if (c) c.textContent = z.querySelectorAll('.kanban-card').length; });
+  board.addEventListener('dragstart', (e) => { const c = e.target.closest('.kanban-card'); if (!c) return; dragged = c; c.classList.add('is-dragging'); e.dataTransfer.effectAllowed = 'move'; });
+  board.addEventListener('dragend', () => { dragged?.classList.remove('is-dragging'); dragged = null; $$('.kanban-dropzone', board).forEach((z) => z.classList.remove('is-over')); });
+  board.addEventListener('dragover', (e) => { const z = e.target.closest('.kanban-dropzone'); if (!z || !dragged) return; e.preventDefault(); z.classList.add('is-over'); });
+  board.addEventListener('drop', (e) => { const z = e.target.closest('.kanban-dropzone'); if (!z || !dragged) return; e.preventDefault(); z.classList.remove('is-over'); z.querySelector('.border-dashed')?.remove(); z.appendChild(dragged); updateCounts(); showToast('Карточка перемещена', 'success'); });
+  board.addEventListener('keydown', (e) => {
+    const card = e.target.closest('.kanban-card'); if (!card) return;
+    const grabbed = card.getAttribute('aria-grabbed') === 'true';
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.setAttribute('aria-grabbed', String(!grabbed)); if (grabbed) updateCounts(); }
+    if (!grabbed) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const zones = $$('.kanban-dropzone', board);
+      const i = zones.indexOf(card.closest('.kanban-dropzone'));
+      const nx = e.key === 'ArrowRight' ? i + 1 : i - 1;
+      if (nx < 0 || nx >= zones.length) return;
+      zones[nx].querySelector('.border-dashed')?.remove(); zones[nx].appendChild(card); updateCounts(); card.focus();
+    }
+  });
+};
+
+/* =========================================================
+ * Wizard
+ * ========================================================= */
+const wizard = { step: 1, total: 4 };
+const wizardSetStep = (n) => {
+  wizard.step = Math.max(1, Math.min(wizard.total, n));
+  $$('#wizard-form .wizard-step').forEach((el) => el.classList.toggle('is-active', +el.dataset.step === wizard.step));
+  const prog = $('#wizard-progress'); if (prog) prog.style.width = `${(wizard.step / wizard.total) * 100}%`;
+  const cur = $('[data-wizard-current]'); if (cur) cur.textContent = wizard.step;
+  const prev = $('[data-action="wizard-prev"]'); if (prev) prev.disabled = wizard.step === 1;
+  const next = $('[data-action="wizard-next"]'); if (next) next.hidden = wizard.step === wizard.total;
+  const sub = $('[data-wizard-submit]'); if (sub) sub.hidden = wizard.step !== wizard.total;
+  if (wizard.step === wizard.total) renderWizardReview();
+};
+const renderWizardReview = () => {
+  const dl = $('#wizard-review'); if (!dl) return;
+  const data = new FormData($('#wizard-form'));
+  const rows = [
+    ['Название', data.get('title') || '—'],
+    ['Площадка', data.get('venue') || '—'],
+    ['Закрытый', data.get('private') ? 'Да' : 'Нет'],
+    ['Бюджет', data.get('budget') ? fmtCurrency(+data.get('budget')) : 'Открытый'],
+    ['Площадь', (data.get('area') || '—') + ' м²'],
+    ['Тип', data.get('type') || '—'],
+  ];
+  dl.innerHTML = rows.map(([k, v]) => `<div class="flex justify-between gap-4 border-b border-gray-100 pb-2 last:border-0"><dt class="text-slate-500">${escapeHtml(k)}</dt><dd class="font-semibold text-slate-800 text-right">${escapeHtml(String(v))}</dd></div>`).join('');
+};
+const wizardNext = () => {
+  const s = $(`#wizard-form .wizard-step[data-step="${wizard.step}"]`);
+  const req = $$('input,select,textarea', s).filter((i) => i.required);
+  for (const i of req) { if (!i.checkValidity()) { i.reportValidity(); return; } }
+  wizardSetStep(wizard.step + 1);
+};
+
+/* =========================================================
+ * Roles & Onboarding
+ * ========================================================= */
+const setRole = (role) => {
+  store.role = role;
+  $$('.role-btn').forEach((b) => {
+    const act = b.dataset.role === role;
+    b.setAttribute('aria-selected', String(act));
+    b.classList.toggle('bg-white', act); b.classList.toggle('shadow-sm', act);
+    b.classList.toggle('text-slate-800', act); b.classList.toggle('text-slate-500', !act);
+  });
+  const l = $('[data-role-label]'); if (l) l.textContent = role === 'customer' ? 'Аккаунт Заказчика' : 'Аккаунт Подрядчика';
+  showToast(role === 'customer' ? 'Режим: Заказчик' : 'Режим: Подрядчик', 'info');
+};
+
+const onboardScenarios = {
+  customer: [
+    { title:'Витрина тендеров', text:'Слева — навигация. Начните с витрины: 30 тендеров от крупнейших компаний.' },
+    { title:'⌘K — командная палитра', text:'Быстрый поиск тендеров, разделов и действий.' },
+    { title:'Смета-конструктор', text:'Соберите смету построчно, платформа посчитает НДС и итог.' },
+    { title:'Эскроу и ЭЦП', text:'Оплата защищена, договоры подписываются через Контур.Подпись.' },
+  ],
+  contractor: [
+    { title:'Мои тендеры', text:'Подавайте заявки и отслеживайте статус в CRM.' },
+    { title:'Смета-конструктор', text:'Собирайте смету построчно и отправляйте заказчику в один клик.' },
+    { title:'AI-анализ', text:'Система подсветит аномалии в вашей смете до отправки.' },
+    { title:'Рейтинг и отзывы', text:'Чем выше рейтинг — тем больше приглашений в закрытые тендеры.' },
+  ],
+};
+let onboardIndex = 0, currentOnboardRole = 'customer';
+const renderOnboarding = () => {
+  const steps = onboardScenarios[currentOnboardRole];
+  const s = steps[onboardIndex];
+  $('[data-onboard-title]').textContent = s.title;
+  $('[data-onboard-text]').textContent = s.text;
+  $$('[data-onboard-dot]').forEach((d, i) => d.classList.toggle('is-active', i === onboardIndex));
+  $('[data-action="onboard-next"]').textContent = onboardIndex === steps.length - 1 ? 'Готово' : 'Далее';
+};
+const showOnboarding = (role = 'customer') => {
+  currentOnboardRole = role; onboardIndex = 0;
+  $('#onboarding').hidden = false;
+  renderOnboarding();
+};
+const onboardNext = () => {
+  const steps = onboardScenarios[currentOnboardRole];
+  if (onboardIndex >= steps.length - 1) { $('#onboarding').hidden = true; try { localStorage.setItem('onboarded_v3', '1'); } catch {} return; }
+  onboardIndex++; renderOnboarding();
+};
+const onboardSkip = () => { $('#onboarding').hidden = true; try { localStorage.setItem('onboarded_v3', '1'); } catch {} };
+
+/* =========================================================
+ * Team
+ * ========================================================= */
+const teamData = [
+  { initials:'АК', color:'brand', name:'Алексей К.', role:'admin', roleLabel:'Администратор', status:'online' },
+  { initials:'МП', color:'rose', name:'Мария П.', role:'manager', roleLabel:'Менеджер', status:'5 мин назад' },
+  { initials:'ДС', color:'teal', name:'Дмитрий С.', role:'engineer', roleLabel:'Инженер', status:'1 ч назад' },
+  { initials:'ЕФ', color:'amber', name:'Елена Ф.', role:'finance', roleLabel:'Финансы', status:'вчера' },
+];
+const renderTeam = () => {
+  const ul = $('#team-list'); if (!ul) return;
+  const roleColors = { admin:'purple', manager:'brand', engineer:'teal', finance:'amber' };
+  ul.innerHTML = teamData.map((m) => `
+    <li class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="w-9 h-9 rounded-full bg-${m.color}-100 text-${m.color}-700 flex items-center justify-center font-bold text-xs">${m.initials}</span>
+        <div><p class="text-sm font-semibold text-slate-800">${escapeHtml(m.name)}</p><p class="text-xs text-slate-500">${escapeHtml(m.roleLabel)}</p></div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="role-badge bg-${roleColors[m.role]}-50 text-${roleColors[m.role]}-700">${escapeHtml(m.roleLabel)}</span>
+        <span class="text-xs ${m.status === 'online' ? 'text-emerald-600 font-semibold' : 'text-slate-400'}">${escapeHtml(m.status)}</span>
+      </div>
+    </li>`).join('');
+};
+
+/* =========================================================
+ * Compare tenders
+ * ========================================================= */
+const openCompareTenders = () => {
+  if (store.selections.size < 2) { showToast('Выберите минимум 2 тендера кнопкой «Выбрать»', 'error'); return; }
+  const sel = store.tenders.filter((t) => store.selections.has(t.id));
+  const w = $('#compare-tenders-content');
+  const metrics = [
+    { label:'Бюджет', fn:(t) => t.budget ? fmtCompact(t.budget) : 'Открытый', best:(t) => t.budget || 0 },
+    { label:'Площадь', fn:(t) => t.area + ' м²', best:(t) => t.area },
+    { label:'Тип', fn:(t) => t.type },
+    { label:'Дедлайн', fn:(t) => new Date(t.deadline).toLocaleDateString('ru-RU') },
+    { label:'Заявок', fn:(t) => t.bids, best:(t) => -t.bids },
+    { label:'Бюджет / м²', fn:(t) => t.budget ? fmtCurrency(Math.round(t.budget/t.area)) : '—', best:(t) => -(t.budget/t.area || 0) },
+  ];
+  w.innerHTML = `
+    <table class="w-full text-sm border-separate border-spacing-y-2">
+      <thead><tr><th class="text-left px-3 py-2 text-xs uppercase text-slate-400">Метрика</th>${sel.map((t) => `<th class="text-left px-3 py-2 text-xs font-bold text-slate-700">${escapeHtml(t.org)}</th>`).join('')}</tr></thead>
+      <tbody>
+        ${metrics.map((m) => {
+          const best = m.best ? Math.max(...sel.map((t) => m.best(t))) : null;
+          return `<tr class="bg-white"><td class="px-3 py-3 text-slate-500 text-xs uppercase font-bold">${escapeHtml(m.label)}</td>
+            ${sel.map((t) => `<td class="px-3 py-3 ${m.best && m.best(t) === best ? 'best-cell' : ''}">${escapeHtml(m.fn(t))}</td>`).join('')}</tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+  $('#compare-tenders-dialog').showModal();
+};
+
+/* =========================================================
+ * Hotkey hint
+ * ========================================================= */
+let hotkeyPrefix = null, hotkeyTimer = null;
+const showHotkeyHint = (text) => {
+  const el = $('#hotkey-hint');
+  if (!el) return;
+  el.textContent = text; el.classList.add('is-visible');
+  clearTimeout(hotkeyTimer);
+  hotkeyTimer = setTimeout(() => el.classList.remove('is-visible'), 1400);
+};
+
+/* =========================================================
+ * Actions
+ * ========================================================= */
+const actions = {
+  'switch-tab': (el) => switchTab(el.dataset.tab, el),
+  'open-tender': (el) => openTenderDetails(el.dataset.tenderId),
+  'toggle-card-select': (el) => {
+    const id = el.dataset.tenderId;
+    if (store.selections.has(id)) store.selections.delete(id); else store.selections.add(id);
+    updateSelectionUI(); renderTenders();
+  },
+  'toggle-select-mode': () => {
+    store.selectMode = !store.selectMode;
+    if (!store.selectMode) store.selections.clear();
+    updateSelectionUI(); renderTenders();
+    showToast(store.selectMode ? 'Клик по карточке — выбор для сравнения' : 'Режим выбора выключен', 'info');
+  },
+  'open-compare-tenders': () => openCompareTenders(),
+  'close-compare-tenders': () => $('#compare-tenders-dialog').close(),
+  'open-contractor': () => openContractorProfile(),
+  'close-contractor': () => closeContractorProfile(),
+  'toggle-notifications': () => toggleNotifOpen(),
+  'switch-inner-tab': (el) => switchInnerTab(el.dataset.panel),
+  'generate-contract': (el) => generateContract(el),
+  'sign-eds': () => signEDS(),
+  'open-1c-export': () => $('#export1c-dialog').showModal(),
+  'close-1c-export': () => $('#export1c-dialog').close(),
+  'do-export': (el) => { $('#export1c-dialog').close(); showToast(`Экспорт в ${el.dataset.target} запущен`, 'success'); },
+  'toast-info': (el) => showToast(el.dataset.message || 'Готово', 'info'),
+  'respond-subcontract': () => showToast('Запрос контактов отправлен!', 'success'),
+  'mark-read': () => markAllRead(),
+  'mark-one-read': (el) => { const n = store.notifications.find((x) => x.id === el.dataset.notif); if (n) n.read = true; renderNotifications(); renderNotifDropdown(); },
+  'filter-notifs': (el) => {
+    currentNotifFilter = el.dataset.filter;
+    $$('.notif-filter').forEach((b) => { const act = b.dataset.filter === currentNotifFilter; b.setAttribute('aria-selected', String(act)); b.classList.toggle('bg-brand-50', act); b.classList.toggle('text-brand-600', act); b.classList.toggle('text-slate-500', !act); });
+    renderNotifications();
+  },
+  'open-palette': () => openPalette(),
+  'close-palette': () => closePalette(),
+  'toggle-theme': () => toggleTheme(),
+  'set-role': (el) => setRole(el.dataset.role),
+  'open-filters': () => openFilters(),
+  'close-filters': () => closeFilters(),
+  'apply-filters': () => applyFilters(),
+  'reset-filters': () => resetFilters(),
+  'export-csv': () => exportCSV(),
+  'export-audit-csv': () => exportAuditCSV(),
+  'fill-demo-inn': () => { const i = $('#inn-input'); if (i) { i.value = '7704376010'; i.focus(); } },
+  'copy-api': async () => { try { await navigator.clipboard.writeText('sk_live_3f9a_example_key_7b2c'); showToast('API-ключ скопирован', 'success'); } catch { showToast('Не удалось', 'error'); } },
+  'confirm-cancel-tender': async () => { const ok = await confirmDialog({ title:'Отменить тендер?', text:'Все заявки будут скрыты.' }); if (ok) showToast('Тендер отменён', 'success'); },
+  'select-quote': (el) => { const q = store.quotes.find((x) => x.id === el.dataset.quote); if (q) showToast(`Выбран: ${q.name}`, 'success'); },
+  'wizard-next': () => wizardNext(),
+  'wizard-prev': () => wizardSetStep(wizard.step - 1),
+  'onboard-next': () => onboardNext(),
+  'onboard-skip': () => onboardSkip(),
+
+  'open-constructor': () => openConstructor(),
+  'close-constructor': () => closeConstructor(),
+  'add-quote-item': () => { store.quoteItems.push({ id:'qi' + Date.now(), name:'Новая позиция', unit:'шт', qty:1, price:0 }); renderQuoteItems(); },
+  'remove-quote-item': (el) => { store.quoteItems = store.quoteItems.filter((i) => i.id !== el.dataset.id); renderQuoteItems(); },
+  'load-quote-template': () => {
+    store.quoteItems = [
+      { id:'qi1', name:'Металлокаркас', unit:'м²', qty:250, price:4200 },
+      { id:'qi2', name:'ЛДФ обшивка', unit:'м²', qty:380, price:2800 },
+      { id:'qi3', name:'Покраска', unit:'м²', qty:380, price:950 },
+      { id:'qi4', name:'LED экран P2.5', unit:'шт', qty:4, price:850000 },
+      { id:'qi5', name:'Монтаж / демонтаж', unit:'чел·дн', qty:40, price:12000 },
+      { id:'qi6', name:'Логистика', unit:'рейс', qty:6, price:45000 },
+      { id:'qi7', name:'Флористика', unit:'компл', qty:1, price:180000 },
+    ];
+    renderQuoteItems(); showToast('Шаблон загружен', 'success');
+  },
+  'save-quote': () => {
+    const total = store.quoteItems.reduce((a, i) => a + i.qty * i.price, 0);
+    showToast(`Смета на ${fmtCurrency(total)} отправлена`, 'success');
+    closeConstructor();
+  },
+
+  'ai-generate-tz': () => {
+    const t = store.currentTender || store.tenders[0];
+    const block = $('#ai-tz-block'), content = $('#ai-tz-content');
+    content.innerHTML = `
+      <p><b>Объект:</b> ${escapeHtml(t.title)} (${t.area} м², ${escapeHtml(t.type).toLowerCase()})</p>
+      <p><b>Материалы:</b> ЛДФ КМ1, металлокаркас, стекло 8 мм, декоративная подсветка.</p>
+      <p><b>Мультимедиа:</b> 4× LED P2.5, видеостена, звук для презентаций.</p>
+      <p><b>Логистика:</b> демонтаж из цеха, перевозка, монтаж в ночное окно.</p>
+      <p><b>Сроки:</b> 35 рабочих дней от подписания.</p>
+      <p><b>Гарантия:</b> 24 мес. на конструктив, 12 мес. на медиа.</p>
+      <p class="italic text-slate-500">Черновик. Отредактируйте под задачу.</p>`;
+    block.hidden = false;
+    showToast('AI-черновик ТЗ готов', 'success', { label:'Скопировать', onClick: () => { navigator.clipboard.writeText(content.innerText); showToast('Скопировано', 'success'); } });
+  },
+
+  'apply-saved': (el) => {
+    const s = store.savedSearches.find((x) => x.id === el.dataset.id); if (!s) return;
+    const gs = $('#global-search'); if (gs) gs.value = s.q;
+    store.filters.q = s.q; renderSearchTokens(s.q); renderTenders();
+    showToast(`Применён: ${s.name}`, 'info');
+  },
+  'remove-saved': (el) => { store.savedSearches = store.savedSearches.filter((x) => x.id !== el.dataset.id); renderSavedSearches(); },
+  'save-current-search': () => {
+    const q = store.filters.q;
+    if (!q) { showToast('Введите запрос', 'error'); return; }
+    store.savedSearches.push({ id:'s' + Date.now(), name:q, q });
+    renderSavedSearches(); showToast('Поиск сохранён', 'success');
+  },
+
+  'open-search-help': () => $('#search-help-dialog').showModal(),
+  'close-search-help': () => $('#search-help-dialog').close(),
+
+  'add-ics': () => {
+    const t = store.currentTender || store.tenders[0];
+    const dt = new Date(t.deadline).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:${t.id}@expo.tender\nDTSTAMP:${dt}\nDTSTART:${dt}\nSUMMARY:Дедлайн: ${t.title}\nDESCRIPTION:${t.org}\nEND:VEVENT\nEND:VCALENDAR`;
+    const blob = new Blob([ics], { type:'text/calendar' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `tender-${t.id}.ics`; a.click(); URL.revokeObjectURL(a.href);
+    showToast('Файл календаря скачан', 'success');
+  },
+
+  'share-tender': () => {
+    if (navigator.share) navigator.share({ title:'Экспо Тендер', url:location.href }).catch(() => {});
+    else { navigator.clipboard.writeText(location.href); showToast('Ссылка скопирована', 'success'); }
+  },
+  'duplicate-tender': (el) => {
+    const id = el.dataset.tenderId || store.currentTender?.id;
+    const t = store.tenders.find((x) => x.id === id); if (!t) return;
+    const copy = { ...t, id: t.id + '-copy-' + Date.now(), title: t.title + ' (копия)', status:A, statusLabel:'Сбор', statusColor:'emerald', bids:0 };
+    store.tenders.unshift(copy);
+    renderTenders(); showToast('Тендер дублирован', 'success');
+  },
+  'quick-edit': (el) => { showToast(`Редактирование ${el.dataset.tenderId}`, 'info'); },
+  'quick-delete': async (el) => {
+    const ok = await confirmDialog({ title:'Удалить тендер?', text:'Это действие нельзя отменить.' });
+    if (!ok) return;
+    store.tenders = store.tenders.filter((t) => t.id !== el.dataset.tenderId);
+    renderTenders(); showToast('Тендер удалён', 'success');
+  },
+
+  'open-invite': () => $('#invite-dialog').showModal(),
+  'close-invite': () => $('#invite-dialog').close(),
+  'connect-1c': () => showToast('Открытие окна подключения...', 'info'),
+  'connect-telegram': () => showToast('Открытие Telegram-бота @ExpoTenderBot...', 'info', { label:'Проверить', onClick: () => showToast('Вы подписаны на уведомления', 'success') }),
+
+  'filter-exhibition': (el) => {
+    const ex = store.exhibitions.find((x) => x.id === el.dataset.exId); if (!ex) return;
+    const gs = $('#global-search'); if (gs) gs.value = ex.matchQ;
+    store.filters.q = ex.matchQ; renderSearchTokens(ex.matchQ); renderTenders(); switchTab('tab-dashboard');
+    showToast(`Показаны: ${ex.name}`, 'info');
+  },
+};
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-action]'); if (!el) return;
+  if (el.tagName === 'INPUT' && el.type === 'checkbox') return;
+  const fn = actions[el.dataset.action];
+  if (typeof fn === 'function') fn(el, e);
+});
+
+/* =========================================================
+ * Notification dropdown
+ * ========================================================= */
+let notifOpen = false;
+const toggleNotifOpen = () => {
+  notifOpen = !notifOpen;
+  const btn = $('[data-action="toggle-notifications"]');
+  const dd = $('#notif-dropdown');
+  if (!btn || !dd) return;
+  btn.setAttribute('aria-expanded', String(notifOpen));
+  dd.hidden = !notifOpen;
+  if (notifOpen) renderNotifDropdown();
+};
+document.addEventListener('click', (e) => {
+  if (!notifOpen) return;
+  if (e.target.closest('.bell-container')) return;
+  notifOpen = false;
+  $('[data-action="toggle-notifications"]')?.setAttribute('aria-expanded','false');
+  const dd = $('#notif-dropdown'); if (dd) dd.hidden = true;
+});
+
+/* =========================================================
+ * Hotkeys
+ * ========================================================= */
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); return; }
+
+  const po = $('#cmd-backdrop').classList.contains('is-open');
+  if (po) {
+    if (e.key === 'Escape') { closePalette(); return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); cmdSelected = Math.min(cmdSelected + 1, cmdItems.length - 1); renderPalette(); return; }
+    if (e.key === 'ArrowUp') { e.preventDefault(); cmdSelected = Math.max(cmdSelected - 1, 0); renderPalette(); return; }
+    if (e.key === 'Enter') { e.preventDefault(); cmdItems[cmdSelected]?.action(); closePalette(); return; }
+  }
+
+  if (e.key === 'Escape') {
+    if ($('#contractor-panel').classList.contains('is-open')) { closeContractorProfile(); return; }
+    if ($('#constructor-panel').classList.contains('is-open')) { closeConstructor(); return; }
+    if ($('#filters-panel').classList.contains('is-open')) { closeFilters(); return; }
+  }
+
+  const openPanel = [$('#contractor-panel'), $('#constructor-panel'), $('#filters-panel')].find((p) => p.classList.contains('is-open'));
+  if (openPanel && e.key === 'Tab') {
+    const items = $$(FOCUSABLE, openPanel).filter((el) => el.offsetParent !== null);
+    if (!items.length) return;
+    const first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  const tl = e.target.closest('[role="tablist"]');
+  if (tl && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+    const tabs = $$('[role="tab"]', tl);
+    const i = tabs.indexOf(document.activeElement); if (i === -1) return;
+    e.preventDefault();
+    const nx = e.key === 'ArrowRight' ? (i + 1) % tabs.length : (i - 1 + tabs.length) % tabs.length;
+    tabs[nx].focus(); tabs[nx].click();
+  }
+
+  const isInput = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
+  if (!isInput && !po) {
+    const k = e.key.toLowerCase();
+    if (hotkeyPrefix === 'g') {
+      const map = { d:'tab-dashboard', c:'tab-create', k:'tab-check', s:'tab-subcontract', p:'tab-projects', m:'tab-media', e:'tab-exhibitions', a:'tab-analytics', l:'tab-audit', n:'tab-notifications', f:'tab-profile' };
+      if (map[k]) { e.preventDefault(); switchTab(map[k]); }
+      hotkeyPrefix = null; return;
+    }
+    if (k === 'g') { hotkeyPrefix = 'g'; showHotkeyHint('G нажата — D/C/K/S/P/M/E/A/L/N/F'); setTimeout(() => { if (hotkeyPrefix === 'g') hotkeyPrefix = null; }, 2000); return; }
+    if (k === 'n' && !e.metaKey && !e.ctrlKey) { switchTab('tab-create'); return; }
+    if (k === '/') { e.preventDefault(); $('#global-search')?.focus(); }
+    if (k === 'escape' && store.selectMode) {
+      store.selectMode = false; store.selections.clear(); updateSelectionUI(); renderTenders();
+    }
+  }
+
+  if (e.key === 'Enter' && document.activeElement === $('#global-search')) {
+    store.filters.q = $('#global-search').value;
+    renderSearchTokens(store.filters.q); renderTenders();
+  }
+});
+
+/* =========================================================
+ * Search
+ * ========================================================= */
+const setupSearch = () => {
+  const i = $('#global-search'); if (!i) return;
+  const run = debounce((v) => { store.filters.q = v; renderSearchTokens(v); renderTenders(); }, 250);
+  i.addEventListener('input', (e) => run(e.target.value));
+};
+
+/* =========================================================
+ * Forms
+ * ========================================================= */
+document.addEventListener('submit', (e) => {
+  const f = e.target;
+  if (f.matches('[data-action="submit-tender"]')) {
+    e.preventDefault();
+    if (!f.checkValidity()) { f.reportValidity(); return; }
+    showToast('Тендер опубликован!', 'success', { label:'Открыть', onClick: () => switchTab('tab-dashboard') });
+    setTimeout(() => { f.reset(); wizardSetStep(1); switchTab('tab-dashboard'); }, 600);
+    return;
+  }
+  if (f.matches('[data-action="check-contractor"]')) { e.preventDefault(); runCheckContractor(f); return; }
+  if (f.matches('[data-action="submit-question"]')) {
+    e.preventDefault();
+    const i = f.querySelector('#qa-input'); const t = i.value.trim(); if (!t) return;
+    store.qa.push({ id:'q' + Date.now(), author:'Скрытый участник (Вы)', role:'participant', text:t, date:new Date() });
+    i.value = ''; renderQA(); showToast('Вопрос отправлен', 'success');
+    return;
+  }
+  if (f.matches('[data-action="submit-invite"]')) {
+    e.preventDefault();
+    const email = $('#invite-email').value;
+    const role = $('#invite-role').value;
+    $('#invite-dialog').close();
+    showToast(`Приглашение отправлено на ${email}`, 'success');
+    store.audit.unshift({ id:'a' + Date.now(), date:new Date(), actor:'Вы', type:'team', text:`Пригласили ${email} (роль: ${role})` });
+    return;
+  }
+});
+
+/* =========================================================
+ * Constructor inline editing
+ * ========================================================= */
+document.addEventListener('input', (e) => {
+  const row = e.target.closest('.position-row'); if (!row) return;
+  const item = store.quoteItems.find((i) => i.id === row.dataset.itemId); if (!item) return;
+  const f = e.target.dataset.field; if (!f) return;
+  item[f] = (f === 'name' || f === 'unit') ? e.target.value : (Number(e.target.value) || 0);
+  const total = store.quoteItems.reduce((a, i) => a + i.qty * i.price, 0);
+  $('#quote-total').textContent = fmtCurrency(total);
+  $('#quote-vat').textContent = fmtCurrency(Math.round(total * 0.2));
+  const sumEl = row.querySelector('span.text-right');
+  if (sumEl) sumEl.textContent = fmtCurrency(item.qty * item.price);
+});
+
+/* =========================================================
+ * Media / audit filters
+ * ========================================================= */
+document.addEventListener('change', (e) => {
+  if (e.target.id === 'media-area' || e.target.id === 'media-budget') renderMedia();
+  if (e.target.id === 'audit-user' || e.target.id === 'audit-type') renderAuditFull();
+});
+document.addEventListener('input', (e) => { if (e.target.id === 'media-q') renderMedia(); });
+
+/* =========================================================
+ * Live simulation
+ * ========================================================= */
+const simulateLive = () => {
+  const samples = [
+    { type:'tenders', title:'Новая заявка на ПМЭФ-2027', sub:'От компании "СтендСтрой"' },
+    { type:'messages', title:'Сообщение от ООО «ДИВИЛЕКС»', sub:'Готовы приступить к 3D' },
+    { type:'system', title:'Выгрузка отчёта готова', sub:'Раздел Аналитика' },
+  ];
+  let i = 0;
+  setInterval(() => {
+    const s = samples[i++ % samples.length];
+    store.notifications.unshift({ id:'n' + Date.now(), ...s, date:new Date(), read:false });
+    renderNotifDropdown();
+    if ($('#tab-notifications').classList.contains('is-active')) renderNotifications();
+  }, 45000);
+};
+
+/* =========================================================
+ * Init
+ * ========================================================= */
+const init = () => {
+  setupTheme();
+  initMediaData();
+  initExhibitionsData();
+  setCurrentDate();
+  renderSavedSearches();
+  renderParticipants();
+  renderSubcontract();
+  renderNotifDropdown();
+  renderTeam();
+  setupSearch();
+  setupKanban();
+  wizardSetStep(1);
+  renderQuoteItems();
+  updateSelectionUI();
+
+  const list = $('#tenders-list');
+  if (list) {
+    list.innerHTML = Array.from({ length: 4 }).map(() => `<div class="bg-white rounded-2xl p-5 border border-gray-100 flex items-center gap-4"><div class="skeleton w-12 h-12"></div><div class="flex-1 space-y-3"><div class="skeleton h-4 w-1/2"></div><div class="skeleton h-3 w-1/3"></div></div></div>`).join('');
+    setTimeout(renderTenders, 400);
+  } else {
+    renderTenders();
+  }
+
+  setInterval(refreshDeadlines, 60_000);
+  $('#cmd-input')?.addEventListener('input', renderPalette);
+  $('#f-files')?.addEventListener('change', () => { const c = $('#f-files').files.length; $('#files-count').textContent = c ? `Выбрано: ${c}` : ''; });
+
+  try {
+    if (!localStorage.getItem('onboarded_v3')) { localStorage.setItem('onboarded_v3', '1'); showOnboarding('customer'); }
+  } catch {}
+
+  simulateLive();
+};
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once:true });
+else init();
+
+})();
+</script>
+
+</body>
+</html>
